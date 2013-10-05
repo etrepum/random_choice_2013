@@ -1,18 +1,16 @@
-rndchoice_efl_2012
+random_choice_2013
 ==================
 
-Random Choice - Erlang Factory Lite 2012 (Moscow, Russia)
+Random Choice
 
 Slides:
-    http://etrepum.github.com/rndchoice_efl_2012
+    http://etrepum.github.com/random_choice_2013
 
 Code:
-    http://github.com/etrepum/rndchoice_efl_2012
+    http://github.com/etrepum/random_choice_2013
 
 See also:
     http://github.com/etrepum/markov
 
-Some edits have been made to the slides since
-the talk was first presented. The version of the slides
-as presented can be seen here:
-    http://github.com/etrepum/rndchoice_efl_2012/tree/v1.0
+This is an updated version of the talk given at Erlang Factory Lite
+Moscow 2012: http://github.com/etrepum/rndchoice_efl_2012

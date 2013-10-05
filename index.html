@@ -1,504 +1,405 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-    <title>Random Choice</title>
-
-    <meta name="description" content="Random Choice, Erlang Factory Lite 2012 (Moscow, Russia)">
-    <meta name="author" content="Bob Ippolito">
-    <meta name="viewport" content="width=1024, user-scalable=no">
-
-    <!-- Core and extension CSS files -->
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/core/deck.core.css">
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/extensions/goto/deck.goto.css">
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/extensions/menu/deck.menu.css">
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/extensions/navigation/deck.navigation.css">
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/extensions/status/deck.status.css">
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/extensions/hash/deck.hash.css">
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/extensions/scale/deck.scale.css">
-
-    <!-- Style theme. More available in /themes/style/ or create your own. -->
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/themes/style/swiss.css">
-
-    <!-- Transition theme. More available in /themes/transition/ or create your own. -->
-    <link rel="stylesheet" href="imakewebthings-deck.js-9accb16/themes/transition/horizontal-slide.css">
-
-    <script src="imakewebthings-deck.js-9accb16/modernizr.custom.js"></script>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Bob Ippolito" />
+  <title>Random Choice</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="reveal.js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
     <style type="text/css">
-    @media print {
-        section { page-break-after: always; }
-    }
-    .slide h1 > p.subtitle {
-        font-size: 0.25em;
-        font-weight: bold;
-        margin-bottom: .25em;
-        color: #888;
-    }
-    #fair-coin p.heads, #fair-coin p.tails {
-        display: none;
-    }
-    #fair-coin .demo.heads p.heads, #fair-coin .demo.tails p.tails {
-        display: block;
-    }
-    #fair-coin .demo p { font-size: 2em; }
-    #die-roll .demo p { font-size: 2em; }
-    div.demo .nomargin { margin-bottom: 0em; line-height: 1.25; }
-    div.demo .big { font-size: 3em; line-height: 1.25; }
-    tr.selected { background-color: #ffaaaa; }
-    td.selected { background-color: #cc6666; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
     </style>
-
+    <link rel="stylesheet" href="reveal.js/css/theme/simple.css" id="theme">
+  <link rel="stylesheet" media="print" href="reveal.js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <link rel="stylesheet" href="css/slides.css"/>
+    <script src="d3/d3.min.js"></script>
+    <script src="js/slides.js"></script>
 </head>
+<body>
+  <div class="reveal">
+    <div class="slides">
 
-<body class="deck-container">
-
-<!-- Begin slides -->
-<section class="slide" id="title-slide">
-    <h1>Random Choice
-        <p class="subtitle">(случайный выбор)</p>
-        <p class="subtitle">Bob Ippolito (<a href="http://twitter.com/etrepum">@etrepum</a>)</p>
-        <p class="subtitle">Erlang Factory Lite 2012, Moscow</p>
-    </h1>
+<section>
+    <h1 class="title">Random Choice</h1>
+    <h2 class="author">Bob Ippolito</h2>
+    <h3 class="date">October 2013</h3>
 </section>
 
-<section class="slide" id="why-this-talk">
-    <h2>Why this talk?</h2>
-    <ul>
-        <li>I was rewriting an IRC bot</li>
-        <li>He "learns" how to chat</li>
-        <li>Brain is based on Markov chains (Це́пь Ма́ркова)</li>
-        <li>Random choice is essential to this and many other interesting applications</li>
-    </ul>
+<section id="why-this-talk" class="slide level1">
+<h1>Why this talk?</h1>
+<ul>
+<li>I was rewriting an IRC bot</li>
+<li>He &quot;learns&quot; how to chat</li>
+<li>Brain is based on Markov chains</li>
+<li>Random choice is essential to this and many other interesting applications</li>
+</ul>
 </section>
-
-<section class="slide" id="markov">
-    <h2>Andrey Andreyevich Markov</h2>
-    <h3>Андре́й Андре́евич Ма́рков</h3>
-    <!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
-    <img src="img/AAMarkov.jpg" />
+<section id="andrey-andreyevich-markov" class="slide level1">
+<h1>Andrey Andreyevich Markov</h1>
+<!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
+<figure>
+<img src="img/AAMarkov.jpg" alt="Андре́й Андре́евич Ма́рков" /><figcaption>Андре́й Андре́евич Ма́рков</figcaption>
+</figure>
 </section>
-
-<section class="slide" id="markov-chain">
-    <h2>Markov chain</h2>
-    <!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
-    <img src="img/Markovkate_01.svg"/>
+<section id="markov-chain" class="slide level1">
+<h1>Markov chain</h1>
+<!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
+<figure>
+<img src="img/Markovkate_01.svg" alt="Markov Chain" /><figcaption>Markov Chain</figcaption>
+</figure>
 </section>
-
-<section class="slide" id="markov-chain-notes">
-    <h2>Markov text generator</h2>
-    <ul>
-        <li>Each step in a markov chain model makes a random choice</li>
-        <li>For the IRC bot, the number of word choices can be very large</li>
-        <li>Previous implementation was very simple, but too inefficient</li>
-        <li>Used too much memory, had to be retired years ago</li>
-    </ul>
+<section id="markov-text-generator" class="slide level1">
+<h1>Markov text generator</h1>
+<ul>
+<li>Each step in a markov chain model makes a random choice</li>
+<li>For the IRC bot, the number of word choices can be very large</li>
+<li>Previous implementation was very simple, but too inefficient</li>
+<li>Used too much memory, had to be retired years ago</li>
+</ul>
 </section>
-
-<section class="slide" id="really">
-    <h2>Really?</h2>
-    <ul>
-        <li>(Most) ad servers also use random choice</li>
-        <li>Mochi Media built this kind of ad server in Erlang</li>
-        <li>Was fun to come up with an efficent way to do it</li>
-        <li>Note that Markov models weren't used in our ad server</li>
-        <li>… but random choice is common to both</li>
-    </ul>
+<section id="really" class="slide level1">
+<h1>Really?</h1>
+<ul>
+<li>(Most) ad servers also use random choice</li>
+<li>Mochi Media built this kind of ad server in Erlang</li>
+<li>Was fun to come up with an efficent way to do it</li>
+<li>Note that Markov models weren't used in our ad server</li>
+<li>… but random choice is common to both</li>
+</ul>
 </section>
-
-<section class="slide" id="random-module">
-    <h2>Erlang's <tt>random</tt> module</h2>
-    <ul>
-        <li>Wichmann-Hill AS183 algorithm from 1982</li>
-        <li>… designed for 16 bit computers with limited arithmetic</li>
-        <li>It has poor results and you probably shouldn't use it</li>
-        <li>Consider the <tt>crypto</tt> module</li>
-        <li>… or a third party library (<a href="https://github.com/jj1bdx/sfmt-erlang">sfmt-erlang</a>)</li>
-        <li>Despite this, I will use <tt>random</tt> for the examples</li>
-    </ul>
+<section id="erlangs-random-module" class="slide level1">
+<h1>Erlang's <code>random</code> module</h1>
+<ul>
+<li>Wichmann-Hill AS183 algorithm from 1982</li>
+<li>… designed for 16 bit computers with limited arithmetic</li>
+<li>It has poor results and you probably shouldn't use it</li>
+<li>Consider the <code>crypto</code> module</li>
+<li>… or a third party library (<a href="https://github.com/jj1bdx/sfmt-erlang">sfmt-erlang</a>)</li>
+<li>Despite this, I will use <code>random</code> for the examples</li>
+</ul>
 </section>
-
-<section class="slide" id="fair-coin-code">
-    <h2>Fair coin</h2>
-    <ul>
-        <li><tt>uniform()</tt> returns a float <tt>0.0 ≤ X &lt; 1.0</tt></li>
-        <li>○ (heads) when <tt>X &lt; 0.5</tt></li>
-        <li>● (tails) otherwise</li>
-    </ul>
+<section id="fair-coin-code" class="slide level1">
+<h1>Fair coin</h1>
+<ul>
+<li><code>uniform()</code> returns a float <code>0.0 ≤ X &amp;lt; 1.0</code></li>
+<li>○ (heads) when <code>X &amp;lt; 0.5</code></li>
+<li>● (tails) otherwise</li>
+</ul>
 </section>
-
-<section class="slide" id="fair-coin">
-    <h2>Fair coin</h2>
-    <div class="demo">
-        <button>Flip Coin</button>
-        <h3 class="nomargin">X = <span class="x">…</span></h3>
-        <p class="heads big">○ (heads), X &lt; 0.5</p>
-        <p class="tails big">● (tails), X ≥ 0.5</p>
-    </div>
-</section>
-
-<section class="slide" id="die-roll-code">
-    <h2>Die roll</h2>
-    <ul>
-        <li><tt>uniform(N)</tt> returns an integer <tt>1 ≤ X ≤ N</tt></li>
-        <li><tt>uniform(N) -> 1 + trunc(N * uniform()).</tt></li>
-    </ul>
-</section>
-
-<section class="slide" id="die-roll">
-    <h2>Die roll</h2>
-    <div class="demo">
-        <button>Roll Die</button>
-        <h3 class="nomargin">X = <span class="x">…</span></h3>
-        <span class="die big"></span>
-    </div>
-</section>
-
-<section class="slide" id="unweighted-selection-code">
-    <h2>Random selection without replacement</h2>
-    <pre><code>choose(L) ->
-  Nth = random:uniform(length(L)),
-  {H, [Choice | T]} = lists:split(Nth, L),
-  {Choice, H ++ T}.</code></pre>
-</section>
-
-<section class="slide" id="unweighted-selection-notes">
-    <h2>Random selection without replacement</h2>
-    <ul>
-        <li>Can be used to shuffle a list (very slowly)</li>
-        <li>Or simulate a deck of cards</li>
-        <li>Not used by our Markov model, but worthy of demonstration</li>
-    </ul>
-</section>
-
-<section class="slide" id="unweighted-selection">
-    <h2>Random selection without replacement</h2>
-    <div class="demo">
-        <button>Select</button>
-        <h3 class="nomargin">Selections = </h3>
-        <span class="selections big">&nbsp;</span>
-        <h3 class="nomargin">L = </h3>
-        <span class="l big">&nbsp;</span>
-    </div>
-</section>
-
-<section class="slide" id="weighted-selection">
-    <h2>Weighted selection without replacement</h2>
-    <ul>
-        <li><tt>{sum(Weight), [{Key, Weight}, …]}</tt></li>
-        <li><pre><code>weight_split(N, L) -> weight_split(N, L, []).
-weight_split(N, L, [H={K, W} | T], Acc) ->
-  case N - W of
-    N1 when N1 > 0 ->
-      weight_split(N1, T, [H | Acc]);
-    _ ->
-      {K, lists:reverse(Acc, T)}
-  end.</pre></code>
-    </ul>
-</section>
-
-<section class="slide" id="unweighted-selection-repl-notes">
-    <h2>Random selection with replacement</h2>
-    <pre><code>choose(L) ->
-  lists:nth(random:uniform(length(L)), L).
-    </code></pre>
-    <ul>
-        <li>Does not change list</li>
-        <li>Similar to rolling a die</li>
-    </ul>
-</section>
-
-<section class="slide" id="unweighted-selection-repl">
-    <h2>Random selection with replacement</h2>
-    <div class="demo selection-with-repl" data-initial='["☃", "♖", "♗", "☺", "✈", "☭"]'>
-        <button>Select</button>
-        <h3 class="nomargin">Selections = </h3>
-        <span class="selections big">&nbsp;</span>
-        <h3 class="nomargin">L = </h3>
-        <span class="l big">&nbsp;</span>
-    </div>
-</section>
-
-<section class="slide" id="weighted-selection-repl-1">
-    <h2>Weighted selection, naive</h2>
-    <ul>
-        <li>With replacement, weight can be implemented simply</li>
-        <li>Just add the item to the list multiple times</li>
-        <li><tt>[a, a, a, b, c, d]</tt></li>
-        <li>50% <tt>a</tt>, ~16.6% <tt>b</tt>, …</tt>
-    </ul>
-</section>
-
-<section class="slide" id="weighted-selection-repl-1">
-    <h2>Weighted selection with replacement</h2>
-    <div class="demo selection-with-repl" data-initial='["☃", "☃", "☃", "☺", "✈", "☭"]'>
-        <button>Select</button>
-        <h3 class="nomargin">Selections = </h3>
-        <span class="selections big">&nbsp;</span>
-        <h3 class="nomargin">L = </h3>
-        <span class="l big">&nbsp;</span>
-    </div>
-</section>
-
-<section class="slide" id="weighted-selection-repl-2-notes">
-    <h2>Optimizing for memory</h2>
-    <ul>
-        <li>Naive solution uses a lot of memory</li>
-        <li>Can do better by counting each unique choice</li>
-        <li><tt>{6, [{a, 3}, {b, 1}, {c, 1}, {d, 1}]}</tt></li>
-        <li>Tradeoff - it's harder to seek to Nth choice</li>
-    </ul>
-</section>
-
-<section class="slide" id="alias-notes">
-    <h2>Alias method</h2>
-    <ul>
-        <li>Create N coins, one for each unique choice</li>
-        <li>Choose coin (by die roll), then flip weighted coin</li>
-        <li>Uses O(N) memory, has O(1) selection!</li>
-    </ul>
-</section>
-
-<section class="slide" id="alias">
-    <h2>Alias method</h2>
-    <div class="demo">
-        <div style="float: left">
-            <button>Choose</button>
-            <h3>Die: <span class="die"></span></h3>
-            <h3>Coin: <span class="coin"></span></h3>
-        </div>
-        <table style="float: right">
-            <thead>
-                <tr><th>head</th><th>tail</th></tr>
-            </thead>
-            <tbody>
-                <tr><td><tt>a</tt> 1</td><td><tt>undefined</tt></td></tr>
-                <tr><td><tt>b</tt> ⅔</td><td><tt>a</tt> ⅓</td></tr>
-                <tr><td><tt>c</tt> ⅔</td><td><tt>a</tt> ⅓</td></tr>
-                <tr><td><tt>d</tt> ⅔</td><td><tt>a</tt> ⅓</td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<section class="slide" id="handling-updates">
-    <h2>Handling updates</h2>
-    <ul>
-        <li>For our IRC bot, the choices update for every word of text</li>
-        <li>Alias method is <tt>O(N)</tt> to update</li>
-        <li>High <tt>O(N)</tt> garbage, no sharing at all</li>
-    </ul>
-</section>
-
-<section class="slide" id="naive-tree-update">
-    <h2>Using a tree</h2>
-    <ul>
-        <li>Can build a tree for efficient updates</li>
-        <li>Fast <tt>O(log N)</tt> updates</li>
-        <li>Low <tt>O(log N)</tt> garbage, good sharing</li>
-        <li>Slow <tt>O(N)</tt> seeks, since sort is by key</li>
-    </ul>
-</section>
-
-<section class="slide" id="max-heap-notes">
-    <h2>Simple max heap</h2>
-    <ul>
-        <li>Seems to be a good compromise between speed and memory</li>
-        <li>Highest weights first</li>
-        <li>Highest weights are most likely to be updated</li>
-        <li>Worst case <tt>O(N)</tt> for every operation</li>
-        <li>But very good common case, near head of the list</li>
-    </ul>
-</section>
-
-<section class="slide" id="max-heap">
-    <h2>Simple max heap</h2>
-    <div class="demo">
-        <div style="float: left">
-            <button>Choose</button>
-            <form>
-                <input type="text" placeholder="Enter words" /><br />
-                <span class="big output"></span>
-            </form>
-        </div>
-        <table style="float: right">
-            <thead>
-                <tr><th>Key&nbsp;</th><th>Weight</th></tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</section>
-
-<section class="slide" id="info">
-    <h2>Questions?</h2>
-    <h3>Slides:<br/>
-        &nbsp;&nbsp;<a href="http://bob.ippoli.to/rndchoice_efl_2012">etrepum.github.com/rndchoice_efl_2012</a></h3>
-    <h3>Code:<br/>
-        &nbsp;&nbsp;<a href="http://github.com/etrepum/rndchoice_efl_2012">github.com/etrepum/rndchoice_efl_2012</a></h3>
-    <h3>Twitter:<br/>
-        &nbsp;&nbsp;<a href="http://twitter.com/etrepum">@etrepum</a></h3>
-</section>
-
-<!-- deck.navigation snippet -->
-<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
-<a href="#" class="deck-next-link" title="Next">&#8594;</a>
-
-<!-- deck.status snippet -->
-<p class="deck-status">
-    <span class="deck-status-current"></span>
-    /
-    <span class="deck-status-total"></span>
+<section id="fair-coin" class="slide level1">
+<h1>Fair coin</h1>
+<div class="demo">
+  <button>
+Flip Coin
+</button>
+  <h3 class="nomargin">
+X = <span class="x">…</span>
+</h3>
+  <p class="heads big">
+○ (heads), X &lt; 0.5
 </p>
+  <p class="tails big">
+● (tails), X ≥ 0.5
+</p>
+</div>
 
-<!-- deck.goto snippet -->
-<form action="." method="get" class="goto-form">
-    <label for="goto-slide">Go to slide:</label>
-    <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
-    <datalist id="goto-datalist"></datalist>
-    <input type="submit" value="Go">
+</section>
+<section id="die-roll-code" class="slide level1">
+<h1>Die roll</h1>
+<ul>
+<li><code>uniform(N)</code> returns an integer <code>1 ≤ X ≤ N</code></li>
+<li><code>uniform(N) -&gt; 1 + trunc(N * uniform()).</code></li>
+</ul>
+</section>
+<section id="die-roll" class="slide level1">
+<h1>Die roll</h1>
+<div class="demo">
+<button>
+Roll Die
+</button>
+  <h3 class="nomargin">
+X = <span class="x">…</span>
+</h3>
+  
+<span class="die big"></span>
+</div>
+</section>
+<section id="unweighted-selection-code" class="slide level1">
+<h1>Random selection without replacement</h1>
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">choose(</span><span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span>
+  <span class="dt">Nth</span> <span class="kw">=</span> <span class="fu">random:uniform(length(</span><span class="dt">L</span><span class="fu">)),</span>
+  <span class="fu">{</span><span class="dt">H</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">Choice</span> <span class="fu">|</span> <span class="dt">T</span><span class="fu">]}</span> <span class="kw">=</span> <span class="fu">lists:split(</span><span class="dt">Nth</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">),</span>
+  <span class="fu">{</span><span class="dt">Choice</span><span class="fu">,</span> <span class="dt">H</span> <span class="kw">++</span> <span class="dt">T</span><span class="fu">}.</span></code></pre>
+</section>
+<section id="unweighted-selection-notes" class="slide level1">
+<h1>Random selection without replacement</h1>
+<ul>
+<li>Can be used to shuffle a list (very slowly)</li>
+<li>Or simulate a deck of cards</li>
+<li>Not used by our Markov model, but worthy of demonstration</li>
+</ul>
+</section>
+<section id="unweighted-selection" class="slide level1">
+<h1>Random selection without replacement</h1>
+<div class="demo">
+<button>
+Select
+</button>
+  <h3 class="nomargin">
+Selections =
+</h3>
+  
+<span class="selections big"> </span>
+<h3 class="nomargin">
+L =
+</h3>
+  
+<span class="l big"> </span>
+</div>
+</section>
+<section id="weighted-selection" class="slide level1">
+<h1>Weighted selection without replacement</h1>
+<ul>
+<li><p><code>{sum(Weight), [{Key, Weight}, …]}</code></p>
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">weight_split(</span><span class="dt">N</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span> <span class="fu">weight_split(</span><span class="dt">N</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">,</span> <span class="fu">[]).</span>
+<span class="fu">weight_split(</span><span class="dt">N</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">H</span><span class="kw">=</span><span class="fu">{</span><span class="dt">K</span><span class="fu">,</span> <span class="dt">W</span><span class="fu">}</span> <span class="fu">|</span> <span class="dt">T</span><span class="fu">],</span> <span class="dt">Acc</span><span class="fu">)</span> <span class="kw">-&gt;</span>
+  <span class="kw">case</span> <span class="dt">N</span> <span class="kw">-</span> <span class="dt">W</span> <span class="kw">of</span>
+    <span class="dt">N1</span> <span class="ch">when</span> <span class="dt">N1</span> <span class="kw">&gt;</span> <span class="dv">0</span> <span class="kw">-&gt;</span>
+      <span class="fu">weight_split(</span><span class="dt">N1</span><span class="fu">,</span> <span class="dt">T</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">H</span> <span class="fu">|</span> <span class="dt">Acc</span><span class="fu">]);</span>
+    <span class="dt">_</span> <span class="kw">-&gt;</span>
+      <span class="fu">{</span><span class="dt">K</span><span class="fu">,</span> <span class="fu">lists:reverse(</span><span class="dt">Acc</span><span class="fu">,</span> <span class="dt">T</span><span class="fu">)}</span>
+  <span class="kw">end</span><span class="fu">.</span></code></pre></li>
+</ul>
+</section>
+<section id="unweighted-selection-repl-notes" class="slide level1">
+<h1>Random selection with replacement</h1>
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">choose(</span><span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span>
+  <span class="fu">lists:nth(random:uniform(length(</span><span class="dt">L</span><span class="fu">)),</span> <span class="dt">L</span><span class="fu">).</span></code></pre>
+<ul>
+<li>Does not change list</li>
+<li>Similar to rolling a die</li>
+</ul>
+</section>
+<section id="unweighted-selection-repl" class="slide level1">
+<h1>Random selection with replacement</h1>
+<div class="demo selection-with-repl" data-initial="[&quot;☃&quot;, &quot;♖&quot;, &quot;♗&quot;, &quot;☺&quot;, &quot;✈&quot;, &quot;☭&quot;]">
+<button>
+Select
+</button>
+  <h3 class="nomargin">
+Selections =
+</h3>
+  
+<span class="selections big"> </span>
+<h3 class="nomargin">
+L =
+</h3>
+  
+<span class="l big"> </span>
+</div>
+</section>
+<section id="weighted-selection-repl-1" class="slide level1">
+<h1>Weighted selection, naive</h1>
+<ul>
+<li>With replacement, weight can be implemented simply</li>
+<li>Just add the item to the list multiple times</li>
+<li><code>[a, a, a, b, c, d]</code></li>
+<li>50% <code>a</code>, ~16.6% <code>b</code>, …</li>
+</ul>
+</section>
+<section id="weighted-selection-repl-1" class="slide level1">
+<h1>Weighted selection with replacement</h1>
+<div class="demo selection-with-repl" data-initial="[&quot;☃&quot;, &quot;☃&quot;, &quot;☃&quot;, &quot;☺&quot;, &quot;✈&quot;, &quot;☭&quot;]">
+<button>
+Select
+</button>
+  <h3 class="nomargin">
+Selections =
+</h3>
+  
+<span class="selections big"> </span>
+<h3 class="nomargin">
+L =
+</h3>
+  
+<span class="l big"> </span>
+</div>
+</section>
+<section id="weighted-selection-repl-2-notes" class="slide level1">
+<h1>Optimizing for memory</h1>
+<ul>
+<li>Naive solution uses a lot of memory</li>
+<li>Can do better by counting each unique choice</li>
+<li><code>{6, [{a, 3}, {b, 1}, {c, 1}, {d, 1}]}</code></li>
+<li>Tradeoff - it's harder to seek to Nth choice</li>
+</ul>
+</section>
+<section id="alias-notes" class="slide level1">
+<h1>Alias method</h1>
+<ul>
+<li>Create N coins, one for each unique choice</li>
+<li>Choose coin (by die roll), then flip weighted coin</li>
+<li>Uses O(N) memory, has O(1) selection!</li>
+</ul>
+</section>
+<section id="alias" class="slide level1">
+<h1>Alias method</h1>
+<div class="demo">
+<div style="float: left">
+  <button>
+Choose
+</button>
+  <h3>
+Die: <span class="die"></span>
+</h3>
+  <h3>
+Coin: <span class="coin"></span>
+</h3>
+</div>
+<table style="float: right">
+  <thead>
+    <tr><th>
+head
+</th><th>
+tail
+</th></tr>
+    </thead>
+  <tbody>
+    <tr><td>
+<tt>a</tt> 1
+</td><td>
+<tt>undefined</tt>
+</td></tr>
+    <tr><td>
+<tt>b</tt> ⅔
+</td><td>
+<tt>a</tt> ⅓
+</td></tr>
+    <tr><td>
+<tt>c</tt> ⅔
+</td><td>
+<tt>a</tt> ⅓
+</td></tr>
+    <tr><td>
+<tt>d</tt> ⅔
+</td><td>
+<tt>a</tt> ⅓
+</td></tr>
+  </tbody>
+</table>
+</div>
+
+</section>
+<section id="handling-updates" class="slide level1">
+<h1>Handling updates</h1>
+<ul>
+<li>For our IRC bot, the choices update for every word of text</li>
+<li>Alias method is <code>O(n)</code> to update</li>
+<li>High <code>O(n)</code> garbage, no sharing at all</li>
+</ul>
+</section>
+<section id="naive-tree-update" class="slide level1">
+<h1>Using a tree</h1>
+<ul>
+<li>Can build a tree for efficient updates</li>
+<li>Fast <code>O(log n)</code> updates</li>
+<li>Low <code>O(log n)</code> garbage, good sharing</li>
+<li>Slow <code>O(n)</code> seeks, since sort is by key</li>
+</ul>
+</section>
+<section id="max-heap-notes" class="slide level1">
+<h1>Simple max heap</h1>
+<p>Seems to be a good compromise between speed and memory Highest weights first Highest weights are most likely to be updated Worst case <code>O(n)</code> for every operation But very good common case, near head of the list</p>
+</section>
+<section id="max-heap" class="slide level1">
+<h1>Simple max heap</h1>
+<div class="demo">
+<div style="float: left">
+  <button>
+Choose
+</button>
+  <form>
+  
+<input type="text" placeholder="Enter words" /><br /> <span class="big output"></span>
 </form>
+</div>
+<table style="float: right">
+  <thead>
+    <tr><th>
+Key 
+</th><th>
+Weight
+</th></tr>
+    </thead>
+  <tbody>
+  </tbody>
+</table>
+</div>
 
-<!-- deck.hash snippet -->
-<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+</section>
+<section id="info" class="slide level1">
+<h1>Questions?</h1>
+<h3>
+Slides:<br/>   <a href="http://bob.ippoli.to/rndchoice_efl_2012">etrepum.github.com/rndchoice_efl_2012</a>
+</h3>
+<h3>
+Code:<br/>   <a href="http://github.com/etrepum/rndchoice_efl_2012">github.com/etrepum/rndchoice_efl_2012</a>
+</h3>
+<h3>
+Twitter:<br/>   <a href="http://twitter.com/etrepum"><span class="citation" data-cites="etrepum">@etrepum</span></a>
+</h3>
 
 
-<!-- jQuery -->
-<script src="imakewebthings-deck.js-9accb16/jquery-1.7.min.js"></script>
+</section>
+    </div>
+  </div>
 
-<!-- Deck Core and extensions -->
-<script src="imakewebthings-deck.js-9accb16/core/deck.core.js"></script>
-<script src="imakewebthings-deck.js-9accb16/extensions/hash/deck.hash.js"></script>
-<script src="imakewebthings-deck.js-9accb16/extensions/menu/deck.menu.js"></script>
-<script src="imakewebthings-deck.js-9accb16/extensions/goto/deck.goto.js"></script>
-<script src="imakewebthings-deck.js-9accb16/extensions/status/deck.status.js"></script>
-<script src="imakewebthings-deck.js-9accb16/extensions/navigation/deck.navigation.js"></script>
-<script src="imakewebthings-deck.js-9accb16/extensions/scale/deck.scale.js"></script>
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.min.js"></script>
 
-<!-- Initialize the deck -->
-<script>
-$(function() {
-    $.deck('.slide');
-    $("#fair-coin .demo").on('click', function (event) {
-        var n = Math.random();
-        $(this).find("span.x").html(n);
-        $(this
-            ).toggleClass('heads', n < 0.5
-            ).toggleClass('tails', !(n < 0.5));
-        return false;
-    });
-    $("#die-roll .demo").on('click', function (event) {
-        var n = Math.floor(Math.random() * 6);
-        $(this).find("span.x").html(1 + n);
-        $(this).find("span.die").html(['⚀','⚁','⚂','⚃','⚄','⚅'][n]);
-        return false;
-    });
-    $("#unweighted-selection .demo").on('click', function (event) {
-        var $l = $(this).find('span.l');
-        var $s = $(this).find('span.selections');
-        var lst = $l.data('list');
-        var sel = $s.data('list');
-        if (lst === undefined || !lst.length) {
-            lst = ['☃', '♖', '♗', '☺', '✈', '☭'];
-            sel = [];
-        } else {
-            var n = Math.floor(Math.random() * lst.length);
-            sel = sel.concat(lst.splice(n, 1));
-        }
-        $l.data('list', lst);
-        $l.html('[' + lst.join(', ') + ']');
-        $s.data('list', sel);
-        $s.html('[' + sel.join(', ') + ']');
-    });
-    $("div.demo.selection-with-repl").on('click', function (event) {
-        var $l = $(this).find('span.l');
-        var $s = $(this).find('span.selections');
-        var lst = $l.data('list');
-        var sel = $s.data('list');
-        if (lst === undefined || !lst.length || sel.length > 9) {
-            lst = $(this).data('initial');
-            sel = [];
-        } else {
-            var n = Math.floor(Math.random() * lst.length);
-            sel.push(lst[n]);
-        }
-        $l.data('list', lst);
-        $l.html('[' + lst.join(', ') + ']');
-        $s.data('list', sel);
-        $s.html('[' + sel.join(', ') + ']');
-    });
-    $("#alias div.demo").on('click', function (event) {
-        $(this).find('.selected').toggleClass('selected', false);
-        var $rows = $(this).find('tbody tr');
-        var die = Math.floor(Math.random() * $rows.length);
-        var coin = Math.random();
-        $(this).find("span.die").html(1 + die);
-        $(this).find("span.coin").html(coin);
-        var $die = $rows.eq(die);
-        $die.toggleClass('selected', true);
-        if (die == 0 || coin < 2.0/3.0) {
-            $die.find('td:eq(0)').toggleClass('selected', true);
-        } else {
-            $die.find('td:eq(1)').toggleClass('selected', true);
-        }
-    });
-    var heap = [];
-    var total = 0;
-    var handleInput = function (word) {
-        var count = 1;
-        total += 1;
-        for (var i = 0; i < heap.length; i++) {
-            if (heap[i][0] === word) {
-                count += heap[i][1];
-                heap.splice(i, 1);
-                break;
-            }
-        }
-        for (i = i - 1; i >= 0 && heap[i][1] <= count; i--) {
-        }
-        heap.splice(i + 1, 0, [word, count]);
-        var repl = function (str) {
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/>/g, '&gt;')
-                .replace(/</g, '&lt;')
-                .replace(/"/g, '&quot;');
-        };
-        var fmt = function (elem) {
-            return '<tr><td>' + repl(elem[0]) + '</td><td>' + elem[1] + '</td></tr>';
-        };
-        $("#max-heap div.demo tbody").html(heap.map(fmt).join(''));
-    };
-    $("#max-heap div.demo form").on('submit', function (event) {
-        var $input = $(this).find('input');
-        $input.val().split(/\s+/).forEach(handleInput);
-        $input.val('');
-        return false;
-    });
-    $("#max-heap div.demo button").on('click', function (event) {
-        var n = 1 + Math.floor(Math.random() * total);
-        var $tbody = $("#max-heap div.demo table tbody");
-        $tbody.find('.selected').toggleClass('selected', false);
-        $rows = $tbody.find('tr');
-        var n1 = n;
-        for (var i = 0; i < heap.length; i++) {
-            $rows.eq(i).toggleClass('selected', true);
-            n1 -= heap[i][1];
-            if (n1 <= 0) {
-                $rows.eq(i).find('td').toggleClass('selected', true);
-                break;
-            }
-        }
-        return false;
-    });
+  <script>
 
-});
-</script>
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
 
-</body>
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
 </html>

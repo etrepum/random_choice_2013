@@ -1,0 +1,12 @@
+#fair-coin p.heads, #fair-coin p.tails {
+    display: none;
+}
+#fair-coin .demo.heads p.heads, #fair-coin .demo.tails p.tails {
+    display: block;
+}
+#fair-coin .demo p { font-size: 2em; }
+#die-roll .demo p { font-size: 2em; }
+div.demo .nomargin { margin-bottom: 0em; line-height: 1.25; }
+div.demo .big { font-size: 3em; line-height: 1.25; }
+tr.selected { background-color: #ffaaaa; }
+td.selected { background-color: #cc6666; }
