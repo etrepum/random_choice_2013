@@ -88,11 +88,9 @@ window.addEventListener('DOMContentLoaded', function () {
       }
       heap.splice(i + 1, 0, [word, count]);
       var repl = function (str) {
-        return str
-          .replace(/&/g, '&amp;')
-          .replace(/>/g, '&gt;')
-          .replace(/</g, '&lt;')
-          .replace(/"/g, '&quot;');
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
       };
       var fmt = function (elem) {
         return '<tr><td>' + repl(elem[0]) + '</td><td>' + elem[1] + '</td></tr>';
@@ -110,15 +108,14 @@ window.addEventListener('DOMContentLoaded', function () {
       var $tbody = d3.selectAll("#max-heap div.demo table tbody");
       $tbody.selectAll('.selected').classed('selected', false);
       var n1 = n;
-      var stop = false;
       $tbody.selectAll('tr').each(function (d, i) {
-        if (stop) return;
-        var $row = d3.select(this);
-        $row.classed('selected', true);
-        n1 -= heap[i][1];
-        if (n1 <= 0) {
-          $row.selectAll('td').classed('selected', true);
-          stop = true;
+        if (n1 > 0) {
+          var $row = d3.select(this);
+          $row.classed('selected', true);
+          n1 -= heap[i][1];
+          if (n1 <= 0) {
+            $row.selectAll('td').classed('selected', true);
+          }
         }
       });
       finishEvent();

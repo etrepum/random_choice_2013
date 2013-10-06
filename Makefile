@@ -15,10 +15,11 @@ d3:
 
 all: index.html
 
-index.html: slides.md header.html Makefile | d3 reveal.js
+index.html: slides.md header.html default.revealjs Makefile | d3 reveal.js
 	$(PANDOC) -s \
 	  --mathjax \
 	  --include-in-header="header.html" \
 	  -t revealjs \
+	  --template default.revealjs \
 	  -o $@ \
 	  $< 
