@@ -20,6 +20,7 @@ index.html: slides.md header.html default.revealjs Makefile | d3 reveal.js
 	  --mathjax \
 	  --include-in-header="header.html" \
 	  -t revealjs \
+	  --variable=transition:none \
 	  --template default.revealjs \
 	  -o $@ \
 	  $< 

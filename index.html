@@ -51,43 +51,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <section id="why-this-talk" class="slide level1">
 <h1>Why this talk?</h1>
 <ul>
-<li>I was rewriting an IRC bot</li>
-<li>He &quot;learns&quot; how to chat</li>
-<li>Brain is based on Markov chains</li>
-<li>Random choice is essential to this and many other interesting applications</li>
-</ul>
-</section>
-<section id="andrey-andreyevich-markov" class="slide level1">
-<h1>Andrey Andreyevich Markov</h1>
-<!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
-<figure>
-<img src="img/AAMarkov.jpg" alt="Андре́й Андре́евич Ма́рков" /><figcaption>Андре́й Андре́евич Ма́рков</figcaption>
-</figure>
-</section>
-<section id="markov-chain" class="slide level1">
-<h1>Markov chain</h1>
-<!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
-<figure>
-<img src="img/Markovkate_01.svg" alt="Markov Chain" /><figcaption>Markov Chain</figcaption>
-</figure>
-</section>
-<section id="markov-text-generator" class="slide level1">
-<h1>Markov text generator</h1>
-<ul>
-<li>Each step in a markov chain model makes a random choice</li>
-<li>For the IRC bot, the number of word choices can be very large</li>
-<li>Previous implementation was very simple, but too inefficient</li>
-<li>Used too much memory, had to be retired years ago</li>
-</ul>
-</section>
-<section id="really" class="slide level1">
-<h1>Really?</h1>
-<ul>
-<li>(Most) ad servers also use random choice</li>
-<li>Mochi Media built this kind of ad server in Erlang</li>
-<li>Was fun to come up with an efficent way to do it</li>
-<li>Note that Markov models weren't used in our ad server</li>
-<li>… but random choice is common to both</li>
+<li>I wrote an ad server in Erlang</li>
+<li>Randomized algorithms are useful for ad serving</li>
+<li>They have other fun applications too</li>
 </ul>
 </section>
 <section id="erlangs-random-module" class="slide level1">
@@ -104,13 +70,15 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <section id="fair-coin-code" class="slide level1">
 <h1>Fair coin</h1>
 <ul>
-<li><code>uniform()</code> returns a float <code>0.0 ≤ X &amp;lt; 1.0</code></li>
-<li>○ (heads) when <code>X &amp;lt; 0.5</code></li>
-<li>● (tails) otherwise</li>
+<li><code class="sourceCode erlang"><span class="fu">uniform()</span></code> returns a float</li>
+<li><code class="sourceCode erlang"><span class="fl">0.0</span> ≤ <span class="dt">X</span> <span class="kw">&lt;</span> <span class="fl">1.0</span></code></li>
+<li>heads when <code class="sourceCode erlang"><span class="dt">X</span> <span class="kw">&lt;</span> <span class="fl">0.5</span></code></li>
+<li>tails otherwise</li>
 </ul>
 </section>
 <section id="fair-coin" class="slide level1">
 <h1>Fair coin</h1>
+<svg viewBox="0 0 1200 500" height="50%" preserveAspectRatio="xMidYMid" class="full diagram"> <g class="number-line" transform="translate(600,425)" > <line x1="-490" x2="-490" y1="-25" y2="25" /> <line x1="490" x2="490" y1="-25" y2="25" /> <line y1="-10" y2="10" /> <line x1="-490" x2="490" /> <text x="-490" y="25">0.0</text> <text y="25">0.5</text> <text x="490" y="25">1.0</text> </g> <g class="coins" transform="translate(600,0)" > </g> <g class="heads box" transform="translate(55,0)"> <text y="25" class="num-heads">0</text> <text y="425">Heads</text> </g> <g class="tails box" transform="translate(1145,0)"> <text y="25" class="num-tails">0</text> <text y="425">Tails</text> </g> </svg>
 <div class="demo">
   <button>
 Flip Coin
@@ -130,12 +98,17 @@ X = <span class="x">…</span>
 <section id="die-roll-code" class="slide level1">
 <h1>Die roll</h1>
 <ul>
-<li><code>uniform(N)</code> returns an integer <code>1 ≤ X ≤ N</code></li>
-<li><code>uniform(N) -&gt; 1 + trunc(N * uniform()).</code></li>
+<li><code class="sourceCode erlang"><span class="fu">uniform(</span><span class="dt">N</span><span class="fu">)</span></code> returns an integer <code class="sourceCode erlang"><span class="dv">1</span> ≤ <span class="dt">X</span> ≤ <span class="dt">N</span></code></li>
+<li>Also easy to implement with <code class="sourceCode erlang"><span class="fu">uniform()</span></code></li>
 </ul>
+<div class="bigger">
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">uniform(</span><span class="dt">N</span><span class="fu">)</span> <span class="kw">-&gt;</span>
+    <span class="dv">1</span> <span class="kw">+</span> <span class="fu">trunc(</span><span class="dt">N</span> <span class="kw">*</span> <span class="fu">uniform()).</span></code></pre>
+</div>
 </section>
 <section id="die-roll" class="slide level1">
 <h1>Die roll</h1>
+<svg viewBox="0 0 1200 500" height="50%" preserveAspectRatio="xMidYMid" class="full diagram"> <g class="number-line" transform="translate(600,425)" > <line x1="-510" x2="510" y1="0" y2="0" /> <line x1="-510" x2="-510" y1="-80" y2="0" /> <line x1="-340" x2="-340" y1="-80" y2="0" /> <line x1="-170" x2="-170" y1="-80" y2="0" /> <line x1="0" x2="0" y1="-80" y2="0" /> <line x1="170" x2="170" y1="-80" y2="0" /> <line x1="340" x2="340" y1="-80" y2="0" /> <line x1="510" x2="510" y1="-80" y2="0" /> <text x="-425" y="10">1</text> <text x="-255" y="10">2</text> <text x="-85" y="10">3</text> <text x="85" y="10">4</text> <text x="255" y="10">5</text> <text x="425" y="10">6</text> <text x="-425" y="-400" class="num-1">0</text> <text x="-255" y="-400" class="num-2">0</text> <text x="-85" y="-400" class="num-3">0</text> <text x="85" y="-400" class="num-4">0</text> <text x="255" y="-400" class="num-5">0</text> <text x="425" y="-400" class="num-6">0</text> </g> <g class="dice" transform="translate(600,0)"> </g> </svg>
 <div class="demo">
 <button>
 Roll Die
@@ -147,52 +120,56 @@ X = <span class="x">…</span>
 <span class="die big"></span>
 </div>
 </section>
-<section id="unweighted-selection-code" class="slide level1">
-<h1>Random selection without replacement</h1>
-<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">choose(</span><span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span>
-  <span class="dt">Nth</span> <span class="kw">=</span> <span class="fu">random:uniform(length(</span><span class="dt">L</span><span class="fu">)),</span>
-  <span class="fu">{</span><span class="dt">H</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">Choice</span> <span class="fu">|</span> <span class="dt">T</span><span class="fu">]}</span> <span class="kw">=</span> <span class="fu">lists:split(</span><span class="dt">Nth</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">),</span>
-  <span class="fu">{</span><span class="dt">Choice</span><span class="fu">,</span> <span class="dt">H</span> <span class="kw">++</span> <span class="dt">T</span><span class="fu">}.</span></code></pre>
-</section>
 <section id="unweighted-selection-notes" class="slide level1">
 <h1>Random selection without replacement</h1>
 <ul>
-<li>Can be used to shuffle a list (very slowly)</li>
-<li>Or simulate a deck of cards</li>
-<li>Not used by our Markov model, but worthy of demonstration</li>
+<li>Choice removed from future selections</li>
+<li>Shuffle a list (very slowly)</li>
+<li>Simulate a deck of cards</li>
+<li>Choose a name from a hat</li>
 </ul>
+</section>
+<section id="unweighted-selection-code" class="slide level1">
+<h1>Random selection without replacement</h1>
+<div class="bigger">
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">choose(</span><span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span>
+  <span class="dt">Nth</span> <span class="kw">=</span> <span class="fu">random:uniform(length(</span><span class="dt">L</span><span class="fu">))</span> <span class="kw">-</span> <span class="dv">1</span><span class="fu">,</span>
+  <span class="fu">{</span><span class="dt">H</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">Choice</span> <span class="fu">|</span> <span class="dt">T</span><span class="fu">]}</span> <span class="kw">=</span> <span class="fu">lists:split(</span><span class="dt">Nth</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">),</span>
+  <span class="fu">{</span><span class="dt">Choice</span><span class="fu">,</span> <span class="dt">H</span> <span class="kw">++</span> <span class="dt">T</span><span class="fu">}.</span></code></pre>
+</div>
 </section>
 <section id="unweighted-selection" class="slide level1">
 <h1>Random selection without replacement</h1>
+<svg viewBox="0 0 1200 500" height="50%" preserveAspectRatio="xMidYMid" class="full diagram"> <g transform="translate(100, 100)" class="selections"> <text x="0" y="0" data-pos="0" class="ready">⁂</text> <text x="200" y="0" data-pos="1" class="ready">♖</text> <text x="400" y="0" data-pos="2" class="ready">♗</text> <text x="600" y="0" data-pos="3" class="ready">☺</text> <text x="800" y="0" data-pos="4" class="ready">✈</text> <text x="1000" y="0" data-pos="5" class="ready">☭</text> </g> </svg>
 <div class="demo">
-<button>
+  <button>
 Select
 </button>
-  <h3 class="nomargin">
-Selections =
-</h3>
-  
-<span class="selections big"> </span>
-<h3 class="nomargin">
-L =
-</h3>
-  
-<span class="l big"> </span>
 </div>
+
+</section>
+<section id="weighted-selection-notes" class="slide level1">
+<h1>Weighted selection without replacement</h1>
+<ul>
+<li>Weights are not always uniform</li>
+<li>Unfair dice, ad selection, sporting events…</li>
+</ul>
 </section>
 <section id="weighted-selection" class="slide level1">
 <h1>Weighted selection without replacement</h1>
-<ul>
-<li><p><code>{sum(Weight), [{Key, Weight}, …]}</code></p>
-<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">weight_split(</span><span class="dt">N</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span> <span class="fu">weight_split(</span><span class="dt">N</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">,</span> <span class="fu">[]).</span>
-<span class="fu">weight_split(</span><span class="dt">N</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">H</span><span class="kw">=</span><span class="fu">{</span><span class="dt">K</span><span class="fu">,</span> <span class="dt">W</span><span class="fu">}</span> <span class="fu">|</span> <span class="dt">T</span><span class="fu">],</span> <span class="dt">Acc</span><span class="fu">)</span> <span class="kw">-&gt;</span>
+<div class="bigger">
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="co">%% {sum(Weight), [{Key, Weight}, …]}</span>
+<span class="fu">wselect(</span><span class="dt">N</span><span class="fu">,</span> <span class="fu">{</span><span class="dt">Sum</span><span class="fu">,</span> <span class="dt">Pairs</span><span class="fu">})</span> <span class="ch">when</span> <span class="dt">N</span> <span class="kw">=&lt;</span> <span class="dt">Sum</span> <span class="kw">-&gt;</span>
+  <span class="fu">wselect(</span><span class="dt">N</span><span class="fu">,</span> <span class="fu">{</span><span class="dt">Sum</span><span class="fu">,</span> <span class="dt">Pairs</span><span class="fu">},</span> <span class="fu">[]).</span>
+
+<span class="fu">wselect(</span><span class="dt">N</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">,</span> <span class="fu">{</span><span class="dt">S</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">H</span><span class="kw">=</span><span class="fu">{</span><span class="dt">K</span><span class="fu">,</span> <span class="dt">W</span><span class="fu">}</span> <span class="fu">|</span> <span class="dt">T</span><span class="fu">]},</span> <span class="dt">Acc</span><span class="fu">)</span> <span class="kw">-&gt;</span>
   <span class="kw">case</span> <span class="dt">N</span> <span class="kw">-</span> <span class="dt">W</span> <span class="kw">of</span>
     <span class="dt">N1</span> <span class="ch">when</span> <span class="dt">N1</span> <span class="kw">&gt;</span> <span class="dv">0</span> <span class="kw">-&gt;</span>
-      <span class="fu">weight_split(</span><span class="dt">N1</span><span class="fu">,</span> <span class="dt">T</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">H</span> <span class="fu">|</span> <span class="dt">Acc</span><span class="fu">]);</span>
+      <span class="fu">wselect(</span><span class="dt">N1</span><span class="fu">,</span> <span class="dt">T</span><span class="fu">,</span> <span class="fu">[</span><span class="dt">H</span> <span class="fu">|</span> <span class="dt">Acc</span><span class="fu">]);</span>
     <span class="dt">_</span> <span class="kw">-&gt;</span>
-      <span class="fu">{</span><span class="dt">K</span><span class="fu">,</span> <span class="fu">lists:reverse(</span><span class="dt">Acc</span><span class="fu">,</span> <span class="dt">T</span><span class="fu">)}</span>
-  <span class="kw">end</span><span class="fu">.</span></code></pre></li>
-</ul>
+      <span class="fu">{</span><span class="dt">K</span><span class="fu">,</span> <span class="fu">{</span><span class="dt">S</span> <span class="kw">-</span> <span class="dt">W</span><span class="fu">,</span> <span class="fu">lists:reverse(</span><span class="dt">Acc</span><span class="fu">,</span> <span class="dt">T</span><span class="fu">)}}</span>
+  <span class="kw">end</span><span class="fu">.</span></code></pre>
+</div>
 </section>
 <section id="unweighted-selection-repl-notes" class="slide level1">
 <h1>Random selection with replacement</h1>
@@ -360,19 +337,61 @@ Weight
 </div>
 
 </section>
+<section id="andrey-andreyevich-markov" class="slide level1">
+<h1>Andrey Andreyevich Markov</h1>
+<!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
+<figure>
+<img src="img/AAMarkov.jpg" alt="Андре́й Андре́евич Ма́рков" /><figcaption>Андре́й Андре́евич Ма́рков</figcaption>
+</figure>
+</section>
+<section id="markov-chain" class="slide level1">
+<h1>Markov chain</h1>
+<!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
+<figure>
+<img src="img/Markovkate_01.svg" alt="Markov Chain" /><figcaption>Markov Chain</figcaption>
+</figure>
+</section>
+<section id="markov-text-generator" class="slide level1">
+<h1>Markov text generator</h1>
+<ul>
+<li>Each step in a markov chain model makes a random choice</li>
+<li>For the IRC bot, the number of word choices can be very large</li>
+<li>Previous implementation was very simple, but too inefficient</li>
+<li>Used too much memory, had to be retired years ago</li>
+</ul>
+</section>
+<section id="really" class="slide level1">
+<h1>Really?</h1>
+<ul>
+<li>(Most) ad servers also use random choice</li>
+<li>Mochi Media built this kind of ad server in Erlang</li>
+<li>Was fun to come up with an efficent way to do it</li>
+<li>Note that Markov models weren't used in our ad server</li>
+<li>… but random choice is common to both</li>
+</ul>
+</section>
 <section id="info" class="slide level1">
 <h1>Questions?</h1>
-<h3>
-Slides:<br/>   <a href="http://bob.ippoli.to/rndchoice_efl_2012">etrepum.github.com/rndchoice_efl_2012</a>
-</h3>
-<h3>
-Code:<br/>   <a href="http://github.com/etrepum/rndchoice_efl_2012">github.com/etrepum/rndchoice_efl_2012</a>
-</h3>
-<h3>
-Twitter:<br/>   <a href="http://twitter.com/etrepum"><span class="citation" data-cites="etrepum">@etrepum</span></a>
-</h3>
-
-
+<table>
+<col style="width: 19%" /><col style="width: 65%" /><tbody>
+<tr class="odd">
+<td style="text-align: left;"><p><strong>Slides</strong></p></td>
+<td style="text-align: left;"><p><a href="http://bob.ippoli.to/random_choice_2013/">http://bob.ippoli.to/random_choice_2013/</a></p></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><p><strong>Source</strong></p></td>
+<td style="text-align: left;"><p><a href="https://github.com/etrepum/random_choice_2013">github.com/etrepum/random_choice_2013</a></p></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><p><strong>Email</strong></p></td>
+<td style="text-align: left;"><p>bob@redivi.com</p></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><p><strong>Twitter</strong></p></td>
+<td style="text-align: left;"><p><span class="citation" data-cites="etrepum">@etrepum</span></p></td>
+</tr>
+</tbody>
+</table>
 </section>
     </div>
   </div>
@@ -390,7 +409,7 @@ Twitter:<br/>   <a href="http://twitter.com/etrepum"><span class="citation" da
         history: true,
         center: false,
         theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+        transition: 'none', // default/cube/page/concave/zoom/linear/fade/none
 
         // Optional libraries used to extend on reveal.js
         dependencies: [

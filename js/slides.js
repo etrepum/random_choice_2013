@@ -2,38 +2,89 @@ window.addEventListener('DOMContentLoaded', function () {
   var Reveal = window.Reveal,
       d3 = window.d3;
   function finishEvent() {
-    d3.event.preventDefault();
     d3.event.stopPropagation();
+    d3.event.preventDefault();
+    d3.event.target.blur();
+    document.getSelection().removeAllRanges();
   }
   d3.selectAll("#fair-coin .demo").on('click', function () {
     var n = Math.random();
     var elem = d3.select(this);
-    elem.selectAll('span.x').text(n);
-    elem.classed('heads', n < 0.5).classed('tails', !(n < 0.5));
+    var heads = n < 0.5;
+    var attr = heads ? 'heads' : 'tails';
+    elem.selectAll('span.x').text(n.toFixed(4));
+    elem.classed('heads', heads).classed('tails', !heads);
+    var svg = d3.selectAll('#fair-coin svg');
+    var coins = svg.selectAll('.coins');
+    var d = coins.datum() || {heads: 0, tails: 0};
+    d[attr] += 1;
+    coins.datum(d);
+    var flips = d.heads + d.tails;
+    svg.selectAll('.num-' + attr).text(d[attr]);
+    coins.insert('circle')
+      .attr('r', '20')
+      .attr('cx', (n - 0.5) * 980)
+      .attr('cy', -100)
+      .classed('heads', heads)
+      .classed('tails', !heads)
+      .transition()
+      .attr('cy', 390 - flips);
+
     finishEvent();
   });
   d3.selectAll("#die-roll .demo").on('click', function () {
-    var n = Math.floor(Math.random() * 6);
+    var n = 1 + Math.floor(Math.random() * 6);
     var elem = d3.select(this);
-    elem.selectAll('span.x').text(1 + n);
-    elem.selectAll('span.die').text(['⚀','⚁','⚂','⚃','⚄','⚅'][n]);
+    var die = ['⚀','⚁','⚂','⚃','⚄','⚅'][n - 1];
+    elem.selectAll('span.x').text(n);
+    elem.selectAll('span.die').text(die);
+    var svg = d3.selectAll('#die-roll svg');
+    var dice = svg.selectAll('.dice');
+    var d = dice.datum() || {};
+    d[n] = 1 + (0 | d[n]);
+    dice.datum(d);
+    var rolls = d[n] - 1;
+    var col = rolls % 3;
+    var row = Math.floor(rolls / 3);
+    svg.selectAll('.num-' + n).text(d[n]);
+    dice.insert('text')
+      .text(die)
+      .attr('y', -100)
+      .transition()
+      .attr('x', (n - 3.5) * 170 + (col - 1) * 50)
+      .attr('y', 400 - row * 50);
     finishEvent();
   });
   d3.selectAll("#unweighted-selection .demo").on('click', function () {
     var elem = d3.select(this);
-    var $l = elem.selectAll('span.l');
-    var $s = elem.selectAll('span.selections');
-    var lst = $l.datum();
-    var sel = $s.datum();
-    if (lst === undefined || !lst.length) {
-      lst = ['☃', '♖', '♗', '☺', '✈', '☭'];
-      sel = [];
-    } else {
-      var n = Math.floor(Math.random() * lst.length);
-      sel = sel.concat(lst.splice(n, 1));
+    var sels = d3.selectAll('#unweighted-selection svg .selections');
+    var choices = sels.selectAll('.ready');
+    var chosens = sels.selectAll('.chosen');
+    if (choices.empty()) {
+      chosens
+        .classed('ready', true)
+        .classed('chosen', false)
+        .transition()
+        .attr('y', 0);
+      return;
     }
-    $l.datum(lst).text('[' + lst.join(', ') + ']');
-    $s.datum(sel).text('[' + sel.join(', ') + ']');
+    var n = Math.floor(Math.random() * choices.size());
+    choices.each(function () {
+      var i = 0 | this.dataset.pos;
+      if (i > n) {
+        this.dataset.pos -= 1;
+        d3.select(this).transition().attr('x', 200 * (i - 1));
+      } else if (i === n) {
+        var pos = chosens.size();
+        this.dataset.pos = pos;
+        d3.select(this)
+          .classed('ready', false)
+          .classed('chosen', true)
+          .transition()
+          .attr('x', 200 * pos)
+          .attr('y', 250);
+      }
+    });
     finishEvent();
   });
   d3.selectAll("div.demo.selection-with-repl").on('click', function () {

@@ -4,33 +4,9 @@
 
 # Why this talk?
 
-* I was rewriting an IRC bot
-* He "learns" how to chat
-* Brain is based on Markov chains
-* Random choice is essential to this and many other interesting applications
-
-# Andrey Andreyevich Markov
-<!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
-![Андре́й Андре́евич Ма́рков](img/AAMarkov.jpg)
-
-# Markov chain
-<!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
-![Markov Chain](img/Markovkate_01.svg)
-
-# Markov text generator
-
-* Each step in a markov chain model makes a random choice
-* For the IRC bot, the number of word choices can be very large
-* Previous implementation was very simple, but too inefficient
-* Used too much memory, had to be retired years ago
-
-# Really?
-
-* (Most) ad servers also use random choice
-* Mochi Media built this kind of ad server in Erlang
-* Was fun to come up with an efficent way to do it
-* Note that Markov models weren't used in our ad server
-* … but random choice is common to both
+* I wrote an ad server in Erlang
+* Randomized algorithms are useful for ad serving
+* They have other fun applications too
 
 # Erlang's `random` module
 
@@ -43,12 +19,34 @@
 
 # Fair coin {#fair-coin-code}
 
-* `uniform()` returns a float `0.0 ≤ X &lt; 1.0`
-* ○ (heads) when `X &lt; 0.5`
-* ● (tails) otherwise
+* `uniform()`{.erlang} returns a float
+* `0.0 ≤ X < 1.0`{.erlang}
+* heads when `X < 0.5`{.erlang}
+* tails otherwise
 
 # Fair coin {#fair-coin}
 
+<svg viewBox="0 0 1200 500" height="50%" preserveAspectRatio="xMidYMid" class="full diagram">
+  <g class="number-line" transform="translate(600,425)" >
+      <line x1="-490" x2="-490" y1="-25" y2="25" />
+      <line x1="490" x2="490" y1="-25" y2="25" />
+      <line y1="-10" y2="10" />
+      <line x1="-490" x2="490" />
+      <text x="-490" y="25">0.0</text>
+      <text y="25">0.5</text>
+      <text x="490" y="25">1.0</text>
+    </g>
+    <g class="coins" transform="translate(600,0)" >
+    </g>
+    <g class="heads box" transform="translate(55,0)">
+      <text y="25" class="num-heads">0</text>
+      <text y="425">Heads</text>
+    </g>
+    <g class="tails box" transform="translate(1145,0)">
+      <text y="25" class="num-tails">0</text>
+      <text y="425">Tails</text>
+    </g>
+</svg>
 <div class="demo">
   <button>Flip Coin</button>
   <h3 class="nomargin">X = <span class="x">…</span></h3>
@@ -58,54 +56,105 @@
 
 # Die roll {#die-roll-code}
 
-* `uniform(N)` returns an integer `1 ≤ X ≤ N`
-* `uniform(N) -> 1 + trunc(N * uniform()).`
+* `uniform(N)`{.erlang} returns an integer `1 ≤ X ≤ N`{.erlang}
+* Also easy to implement with `uniform()`{.erlang}
+
+<div class="bigger">
+```erlang
+uniform(N) ->
+    1 + trunc(N * uniform()).
+```
+</div>
 
 # Die roll {#die-roll}
 
+<svg viewBox="0 0 1200 500" height="50%" preserveAspectRatio="xMidYMid" class="full diagram">
+  <g class="number-line" transform="translate(600,425)" >
+    <line x1="-510" x2="510" y1="0" y2="0" />
+    <line x1="-510" x2="-510" y1="-80" y2="0" />
+    <line x1="-340" x2="-340" y1="-80" y2="0" />
+    <line x1="-170" x2="-170" y1="-80" y2="0" />
+    <line x1="0" x2="0" y1="-80" y2="0" />
+    <line x1="170" x2="170" y1="-80" y2="0" />
+    <line x1="340" x2="340" y1="-80" y2="0" />
+    <line x1="510" x2="510" y1="-80" y2="0" />
+    <text x="-425" y="10">1</text>
+    <text x="-255" y="10">2</text>
+    <text x="-85" y="10">3</text>
+    <text x="85" y="10">4</text>
+    <text x="255" y="10">5</text>
+    <text x="425" y="10">6</text>
+    <text x="-425" y="-400" class="num-1">0</text>
+    <text x="-255" y="-400" class="num-2">0</text>
+    <text x="-85" y="-400" class="num-3">0</text>
+    <text x="85" y="-400" class="num-4">0</text>
+    <text x="255" y="-400" class="num-5">0</text>
+    <text x="425" y="-400" class="num-6">0</text>
+  </g>
+  <g class="dice" transform="translate(600,0)">
+  </g>
+</svg>
 <div class="demo">
   <button>Roll Die</button>
   <h3 class="nomargin">X = <span class="x">…</span></h3>
   <span class="die big"></span>
 </div>
 
+# Random selection without replacement {#unweighted-selection-notes}
+
+* Choice removed from future selections
+* Shuffle a list (very slowly)
+* Simulate a deck of cards
+* Choose a name from a hat
+
 # Random selection without replacement {#unweighted-selection-code}
 
+<div class="bigger">
 ```erlang
 choose(L) ->
-  Nth = random:uniform(length(L)),
+  Nth = random:uniform(length(L)) - 1,
   {H, [Choice | T]} = lists:split(Nth, L),
   {Choice, H ++ T}.
 ```
-
-# Random selection without replacement {#unweighted-selection-notes}
-
-* Can be used to shuffle a list (very slowly)
-* Or simulate a deck of cards
-* Not used by our Markov model, but worthy of demonstration
+</div>
 
 # Random selection without replacement {#unweighted-selection}
+<svg viewBox="0 0 1200 500" height="50%" preserveAspectRatio="xMidYMid" class="full diagram">
+  <g transform="translate(100, 100)" class="selections">
+    <text x="0" y="0" data-pos="0" class="ready">⁂</text>
+    <text x="200" y="0" data-pos="1" class="ready">♖</text>
+    <text x="400" y="0" data-pos="2" class="ready">♗</text>
+    <text x="600" y="0" data-pos="3" class="ready">☺</text>
+    <text x="800" y="0" data-pos="4" class="ready">✈</text>
+    <text x="1000" y="0" data-pos="5" class="ready">☭</text>
+  </g>
+</svg>
 <div class="demo">
   <button>Select</button>
-  <h3 class="nomargin">Selections = </h3>
-  <span class="selections big">&nbsp;</span>
-  <h3 class="nomargin">L = </h3>
-  <span class="l big">&nbsp;</span>
 </div>
+
+# Weighted selection without replacement {#weighted-selection-notes}
+
+* Weights are not always uniform
+* Unfair dice, ad selection, sporting events…
 
 # Weighted selection without replacement {#weighted-selection}
 
-* `{sum(Weight), [{Key, Weight}, …]}`
+<div class="bigger">
 ```erlang
-weight_split(N, L) -> weight_split(N, L, []).
-weight_split(N, L, [H={K, W} | T], Acc) ->
+%% {sum(Weight), [{Key, Weight}, …]}
+wselect(N, {Sum, Pairs}) when N =< Sum ->
+  wselect(N, {Sum, Pairs}, []).
+
+wselect(N, L, {S, [H={K, W} | T]}, Acc) ->
   case N - W of
     N1 when N1 > 0 ->
-      weight_split(N1, T, [H | Acc]);
+      wselect(N1, T, [H | Acc]);
     _ ->
-      {K, lists:reverse(Acc, T)}
+      {K, {S - W, lists:reverse(Acc, T)}}
   end.
 ```
+</div>
 
 # Random selection with replacement {#unweighted-selection-repl-notes}
 
@@ -214,11 +263,39 @@ But very good common case, near head of the list
 </table>
 </div>
 
+# Andrey Andreyevich Markov
+<!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
+![Андре́й Андре́евич Ма́рков](img/AAMarkov.jpg)
+
+# Markov chain
+<!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
+![Markov Chain](img/Markovkate_01.svg)
+
+# Markov text generator
+
+* Each step in a markov chain model makes a random choice
+* For the IRC bot, the number of word choices can be very large
+* Previous implementation was very simple, but too inefficient
+* Used too much memory, had to be retired years ago
+
+# Really?
+
+* (Most) ad servers also use random choice
+* Mochi Media built this kind of ad server in Erlang
+* Was fun to come up with an efficent way to do it
+* Note that Markov models weren't used in our ad server
+* … but random choice is common to both
+
 # Questions? {#info}
 
-<h3>Slides:<br/>
-&nbsp;&nbsp;<a href="http://bob.ippoli.to/rndchoice_efl_2012">etrepum.github.com/rndchoice_efl_2012</a></h3>
-<h3>Code:<br/>
-&nbsp;&nbsp;<a href="http://github.com/etrepum/rndchoice_efl_2012">github.com/etrepum/rndchoice_efl_2012</a></h3>
-<h3>Twitter:<br/>
-&nbsp;&nbsp;<a href="http://twitter.com/etrepum">@etrepum</a></h3>
++-------------+----------------------------------------------+
+| **Slides**  | <http://bob.ippoli.to/random_choice_2013/>   |
++-------------+----------------------------------------------+
+| **Source**  | [github.com/etrepum/random_choice_2013]      |
++-------------+----------------------------------------------+
+| **Email**   | bob@redivi.com                               |
++-------------+----------------------------------------------+
+| **Twitter** | @etrepum                                     |
++-------------+----------------------------------------------+
+
+[github.com/etrepum/random_choice_2013]: https://github.com/etrepum/random_choice_2013

@@ -10,3 +10,33 @@ div.demo .nomargin { margin-bottom: 0em; line-height: 1.25; }
 div.demo .big { font-size: 3em; line-height: 1.25; }
 tr.selected { background-color: #ffaaaa; }
 td.selected { background-color: #cc6666; }
+
+.reveal .slides>section { padding: 0 }
+.reveal .slides>section ul { font-size: 1.3333em; line-height: 1.2em; }
+.reveal .slides>section li { margin-bottom: 0.3333em; }
+
+.reveal button { font-size: 1em; }
+.reveal h1 {
+  font-size: 2em;
+  color: #c00;
+  text-shadow: none; 
+  font-family: 'Helvetica Neue', sans-serif;
+  border-bottom: 4px solid #eee;
+}
+.reveal h2 { font-size: 2em; }
+.reveal h3 { font-size: 1.5em; }
+.reveal h4 { font-size: 1em; }
+.bigger pre { font-size: 100%; box-shadow: none; }
+svg.full { max-width: 100%; }
+
+svg .selections text { font-size: 200px; text-anchor: middle; alignment-baseline: central; }
+svg .selections .chosen { fill: grey; }
+svg .number-line line { stroke: black; stroke-width: 4px; }
+svg .number-line text { text-anchor: middle; alignment-baseline: text-before-edge; }
+svg .heads text { text-anchor: middle; alignment-baseline: central; }
+svg .tails text { text-anchor: middle; alignment-baseline: central; }
+svg .coins .heads { stroke-width: 3px; fill: white; stroke: grey; }
+svg .coins .tails { stroke-width: 3px; fill: black; stroke: grey; }
+svg .dice text { text-anchor: middle; alignment-baseline: central; }
+
+.reveal section img { border: none; box-shadow: none; }
