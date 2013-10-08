@@ -36,6 +36,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
   <![endif]-->
     <link rel="stylesheet" href="css/slides.css"/>
     <script src="d3/d3.min.js"></script>
+    <script src="js/ewd.js"></script>
     <script src="js/slides.js"></script>
 </head>
 <body>
@@ -231,7 +232,9 @@ Select
 <ul>
 <li>Create N coins, one for each unique choice</li>
 <li>Choose coin (by die roll), then flip weighted coin</li>
-<li>Uses O(N) memory, has O(1) selection!</li>
+<li>Uses <code>O(n)</code> memory, has <code>O(1)</code> selection!</li>
+<li>Can initialize in <code>O(n)</code> time (Vose)</li>
+<li>Algorithm doesn't fit on slide :(</li>
 </ul>
 </section>
 <section id="alias" class="slide level1">
@@ -288,6 +291,7 @@ tail
 <li>For our IRC bot, the choices update for every word of text</li>
 <li>Alias method is <code>O(n)</code> to update</li>
 <li>High <code>O(n)</code> garbage, no sharing at all</li>
+<li>Hard problem to solve with Erlang's purely functional data structures</li>
 </ul>
 </section>
 <section id="naive-tree-update" class="slide level1">
@@ -299,18 +303,18 @@ tail
 <li>Slow <code>O(n)</code> seeks, since sort is by key</li>
 </ul>
 </section>
-<section id="max-heap-notes" class="slide level1">
-<h1>Simple max heap</h1>
+<section id="sorted-list-notes" class="slide level1">
+<h1>Sorted list</h1>
 <ul>
-<li>Seems to be a good compromise between speed and memory</li>
+<li>Seems to be a good compromise between speed and memory (in Erlang)</li>
 <li>Highest weights first</li>
 <li>Highest weights are most likely to be updated</li>
 <li>Worst case <code>O(n)</code> for every operation</li>
-<li>But very good common case, near head of the list</li>
+<li>But very good common case is near head of the list</li>
 </ul>
 </section>
-<section id="max-heap" class="slide level1">
-<h1>Simple max heap</h1>
+<section id="sorted-list" class="slide level1">
+<h1>Sorted list</h1>
 <div class="demo">
 <div style="float: left">
   <button>

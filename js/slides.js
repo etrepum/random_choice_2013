@@ -86,7 +86,8 @@ window.addEventListener('DOMContentLoaded', function () {
     });
     finishEvent();
   });
-  d3.selectAll("#unweighted-selection-repl .demo, #weighted-selection-repl-naive .demo").on('click', function () {
+  d3.selectAll("#unweighted-selection-repl .demo," +
+               "#weighted-selection-repl-naive .demo").on('click', function () {
     var sels = d3.select(this.parentNode).selectAll('svg .selections');
     var choices = sels.selectAll('.ready');
     var n = Math.floor(Math.random() * choices.size());
@@ -132,21 +133,21 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   (function () {
-    var heap = [];
+    var sortedList = [];
     var total = 0;
     var handleInput = function (word) {
       var count = 1;
       total += 1;
-      for (var i = 0; i < heap.length; i++) {
-        if (heap[i][0] === word) {
-          count += heap[i][1];
-          heap.splice(i, 1);
+      for (var i = 0; i < sortedList.length; i++) {
+        if (sortedList[i][0] === word) {
+          count += sortedList[i][1];
+          sortedList.splice(i, 1);
           break;
         }
       }
-      for (i = i - 1; i >= 0 && heap[i][1] <= count; i--) {
+      for (i = i - 1; i >= 0 && sortedList[i][1] <= count; i--) {
       }
-      heap.splice(i + 1, 0, [word, count]);
+      sortedList.splice(i + 1, 0, [word, count]);
       var repl = function (str) {
         var div = document.createElement('div');
         div.appendChild(document.createTextNode(str));
@@ -155,24 +156,24 @@ window.addEventListener('DOMContentLoaded', function () {
       var fmt = function (elem) {
         return '<tr><td>' + repl(elem[0]) + '</td><td>' + elem[1] + '</td></tr>';
       };
-      d3.selectAll("#max-heap div.demo tbody").html(heap.map(fmt).join(''));
+      d3.selectAll("#sorted-list div.demo tbody").html(sortedList.map(fmt).join(''));
     };
-    d3.selectAll("#max-heap div.demo form").on('submit', function () {
+    d3.selectAll("#sorted-list div.demo form").on('submit', function () {
       var $input = d3.select(this).selectAll('input');
       $input.property('value').split(/\s+/).forEach(handleInput);
       $input.property('value', '');
       finishEvent();
     });
-    d3.selectAll("#max-heap div.demo button").on('click', function () {
+    d3.selectAll("#sorted-list div.demo button").on('click', function () {
       var n = 1 + Math.floor(Math.random() * total);
-      var $tbody = d3.selectAll("#max-heap div.demo table tbody");
+      var $tbody = d3.selectAll("#sorted-list div.demo table tbody");
       $tbody.selectAll('.selected').classed('selected', false);
       var n1 = n;
       $tbody.selectAll('tr').each(function (d, i) {
         if (n1 > 0) {
           var $row = d3.select(this);
           $row.classed('selected', true);
-          n1 -= heap[i][1];
+          n1 -= sortedList[i][1];
           if (n1 <= 0) {
             $row.selectAll('td').classed('selected', true);
           }

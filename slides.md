@@ -229,9 +229,12 @@ choose(L) ->
 
 * Create N coins, one for each unique choice
 * Choose coin (by die roll), then flip weighted coin
-* Uses O(N) memory, has O(1) selection!
+* Uses `O(n)` memory, has `O(1)` selection!
+* Can initialize in `O(n)` time (Vose)
+* Algorithm doesn't fit on slide :(
 
 # Alias method {#alias}
+
 <div class="demo">
 <div style="float: left">
   <button>Choose</button>
@@ -256,6 +259,7 @@ choose(L) ->
 * For our IRC bot, the choices update for every word of text
 * Alias method is `O(n)` to update
 * High `O(n)` garbage, no sharing at all
+* Hard problem to solve with Erlang's purely functional data structures
 
 # Using a tree {#naive-tree-update}
 
@@ -264,15 +268,16 @@ choose(L) ->
 * Low `O(log n)` garbage, good sharing
 * Slow `O(n)` seeks, since sort is by key
 
-# Simple max heap {#max-heap-notes}
+# Sorted list {#sorted-list-notes}
 
-* Seems to be a good compromise between speed and memory
+* Seems to be a good compromise between speed and memory (in Erlang)
 * Highest weights first
 * Highest weights are most likely to be updated
 * Worst case `O(n)` for every operation
-* But very good common case, near head of the list
+* But very good common case is near head of the list
 
-# Simple max heap {#max-heap}
+# Sorted list {#sorted-list}
+
 <div class="demo">
 <div style="float: left">
   <button>Choose</button>
