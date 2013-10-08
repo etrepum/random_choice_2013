@@ -119,6 +119,7 @@ choose(L) ->
 </div>
 
 # Random selection without replacement {#unweighted-selection}
+
 <svg viewBox="0 0 1200 500" height="50%" preserveAspectRatio="xMidYMid" class="full diagram">
   <g transform="translate(100, 100)" class="selections">
     <text x="0" y="0" data-pos="0" class="ready">⁂</text>
@@ -158,20 +159,31 @@ wselect(N, L, {S, [H={K, W} | T]}, Acc) ->
 
 # Random selection with replacement {#unweighted-selection-repl-notes}
 
-```erlang
-choose(L) ->
-  lists:nth(random:uniform(length(L)), L).
-```
 * Does not change list
 * Similar to rolling a die
 
+<div class="bigger">
+```erlang
+choose(L) ->
+  Nth = random:uniform(length(L)) - 1,
+  lists:nth(Nth, L).
+```
+</div>
+
 # Random selection with replacement {#unweighted-selection-repl}
-<div class="demo selection-with-repl" data-initial='["☃", "♖", "♗", "☺", "✈", "☭"]'>
+
+<svg viewBox="0 0 1200 500" height="70%" preserveAspectRatio="xMidYMid" class="full diagram">
+  <g transform="translate(100, 100)" class="selections">
+    <text x="0" y="0" data-pos="0" class="ready">⁂</text>
+    <text x="200" y="0" data-pos="1" class="ready">♖</text>
+    <text x="400" y="0" data-pos="2" class="ready">♗</text>
+    <text x="600" y="0" data-pos="3" class="ready">☺</text>
+    <text x="800" y="0" data-pos="4" class="ready">✈</text>
+    <text x="1000" y="0" data-pos="5" class="ready">☭</text>
+  </g>
+</svg>
+<div class="demo selection-with-repl">
   <button>Select</button>
-  <h3 class="nomargin">Selections = </h3>
-  <span class="selections big">&nbsp;</span>
-  <h3 class="nomargin">L = </h3>
-  <span class="l big">&nbsp;</span>
 </div>
 
 # Weighted selection, naive {#weighted-selection-repl-1}
@@ -181,22 +193,37 @@ choose(L) ->
 * `[a, a, a, b, c, d]`
 * 50% `a`, ~16.6% `b`, …
 
-# Weighted selection with replacement {#weighted-selection-repl-1}
+# Weighted selection with replacement {#weighted-selection-repl-naive}
 
-<div class="demo selection-with-repl" data-initial='["☃", "☃", "☃", "☺", "✈", "☭"]'>
+<svg viewBox="0 0 1200 500" height="70%" preserveAspectRatio="xMidYMid" class="full diagram">
+  <g transform="translate(100, 100)" class="selections">
+    <text x="0" y="0" data-pos="0" class="ready">⁂</text>
+    <text x="200" y="0" data-pos="1" class="ready">⁂</text>
+    <text x="400" y="0" data-pos="2" class="ready">⁂</text>
+    <text x="600" y="0" data-pos="3" class="ready">☺</text>
+    <text x="800" y="0" data-pos="4" class="ready">✈</text>
+    <text x="1000" y="0" data-pos="5" class="ready">☭</text>
+  </g>
+</svg>
+<div class="demo selection-with-repl">
   <button>Select</button>
-  <h3 class="nomargin">Selections = </h3>
-  <span class="selections big">&nbsp;</span>
-  <h3 class="nomargin">L = </h3>
-  <span class="l big">&nbsp;</span>
 </div>
 
 # Optimizing for memory {#weighted-selection-repl-2-notes}
 
 * Naive solution uses a lot of memory
 * Can do better by counting each unique choice
-* `{6, [{a, 3}, {b, 1}, {c, 1}, {d, 1}]}`
 * Tradeoff - it's harder to seek to Nth choice
+
+<div class="bigger">
+```erlang
+{6, [ {a, 3}
+    , {b, 1}
+    , {c, 1}
+    , {d, 1} ]}
+```
+</div>
+
 
 # Alias method {#alias-notes}
 
@@ -239,11 +266,11 @@ choose(L) ->
 
 # Simple max heap {#max-heap-notes}
 
-Seems to be a good compromise between speed and memory
-Highest weights first
-Highest weights are most likely to be updated
-Worst case `O(n)` for every operation
-But very good common case, near head of the list
+* Seems to be a good compromise between speed and memory
+* Highest weights first
+* Highest weights are most likely to be updated
+* Worst case `O(n)` for every operation
+* But very good common case, near head of the list
 
 # Simple max heap {#max-heap}
 <div class="demo">

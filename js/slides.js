@@ -56,7 +56,6 @@ window.addEventListener('DOMContentLoaded', function () {
     finishEvent();
   });
   d3.selectAll("#unweighted-selection .demo").on('click', function () {
-    var elem = d3.select(this);
     var sels = d3.selectAll('#unweighted-selection svg .selections');
     var choices = sels.selectAll('.ready');
     var chosens = sels.selectAll('.chosen');
@@ -87,21 +86,31 @@ window.addEventListener('DOMContentLoaded', function () {
     });
     finishEvent();
   });
-  d3.selectAll("div.demo.selection-with-repl").on('click', function () {
-    var elem = d3.select(this);
-    var $l = elem.selectAll('span.l');
-    var $s = elem.selectAll('span.selections');
-    var lst = $l.datum();
-    var sel = $s.datum();
-    if (lst === undefined || !lst.length || sel.length > 9) {
-      lst = JSON.parse(this.dataset.initial);
-      sel = [];
-    } else {
-      var n = Math.floor(Math.random() * lst.length);
-      sel.push(lst[n]);
-    }
-    $l.datum(lst).text('[' + lst.join(', ') + ']');
-    $s.datum(sel).text('[' + sel.join(', ') + ']');
+  d3.selectAll("#unweighted-selection-repl .demo, #weighted-selection-repl-naive .demo").on('click', function () {
+    var sels = d3.select(this.parentNode).selectAll('svg .selections');
+    var choices = sels.selectAll('.ready');
+    var n = Math.floor(Math.random() * choices.size());
+    var el = null;
+    choices.each(function (d, i) {
+      if (i === n) {
+        el = d3.select(this);
+      }
+    });
+    var c = (0|el.datum());
+    el.datum(1 + c);
+    var y0 = (0|el.attr('y'));
+    var x0 = (0|el.attr('x'));
+    var t0 = 'translate(' + x0 + ',' + y0 + ')';
+    var t1 = 'translate(' + (x0 - 50 + 10 * c) + ',' + (100 + y0 + 10 * c) + ')';
+    sels
+      .insert('text')
+      .text(el.text())
+      .attr('transform', t0 + ' scale(1,1)')
+      .attr('y', 0)
+      .classed('chosen', true)
+      .transition()
+      .attr('transform', t1 + ' scale(0.5,0.5)')
+      .attr('y', 250);
     finishEvent();
   });
   d3.selectAll("#alias div.demo").on('click', function () {

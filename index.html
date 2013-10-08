@@ -173,30 +173,25 @@ Select
 </section>
 <section id="unweighted-selection-repl-notes" class="slide level1">
 <h1>Random selection with replacement</h1>
-<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">choose(</span><span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span>
-  <span class="fu">lists:nth(random:uniform(length(</span><span class="dt">L</span><span class="fu">)),</span> <span class="dt">L</span><span class="fu">).</span></code></pre>
 <ul>
 <li>Does not change list</li>
 <li>Similar to rolling a die</li>
 </ul>
+<div class="bigger">
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">choose(</span><span class="dt">L</span><span class="fu">)</span> <span class="kw">-&gt;</span>
+  <span class="dt">Nth</span> <span class="kw">=</span> <span class="fu">random:uniform(length(</span><span class="dt">L</span><span class="fu">))</span> <span class="kw">-</span> <span class="dv">1</span><span class="fu">,</span>
+  <span class="fu">lists:nth(</span><span class="dt">Nth</span><span class="fu">,</span> <span class="dt">L</span><span class="fu">).</span></code></pre>
+</div>
 </section>
 <section id="unweighted-selection-repl" class="slide level1">
 <h1>Random selection with replacement</h1>
-<div class="demo selection-with-repl" data-initial="[&quot;☃&quot;, &quot;♖&quot;, &quot;♗&quot;, &quot;☺&quot;, &quot;✈&quot;, &quot;☭&quot;]">
-<button>
+<svg viewBox="0 0 1200 500" height="70%" preserveAspectRatio="xMidYMid" class="full diagram"> <g transform="translate(100, 100)" class="selections"> <text x="0" y="0" data-pos="0" class="ready">⁂</text> <text x="200" y="0" data-pos="1" class="ready">♖</text> <text x="400" y="0" data-pos="2" class="ready">♗</text> <text x="600" y="0" data-pos="3" class="ready">☺</text> <text x="800" y="0" data-pos="4" class="ready">✈</text> <text x="1000" y="0" data-pos="5" class="ready">☭</text> </g> </svg>
+<div class="demo selection-with-repl">
+  <button>
 Select
 </button>
-  <h3 class="nomargin">
-Selections =
-</h3>
-  
-<span class="selections big"> </span>
-<h3 class="nomargin">
-L =
-</h3>
-  
-<span class="l big"> </span>
 </div>
+
 </section>
 <section id="weighted-selection-repl-1" class="slide level1">
 <h1>Weighted selection, naive</h1>
@@ -207,32 +202,29 @@ L =
 <li>50% <code>a</code>, ~16.6% <code>b</code>, …</li>
 </ul>
 </section>
-<section id="weighted-selection-repl-1" class="slide level1">
+<section id="weighted-selection-repl-naive" class="slide level1">
 <h1>Weighted selection with replacement</h1>
-<div class="demo selection-with-repl" data-initial="[&quot;☃&quot;, &quot;☃&quot;, &quot;☃&quot;, &quot;☺&quot;, &quot;✈&quot;, &quot;☭&quot;]">
-<button>
+<svg viewBox="0 0 1200 500" height="70%" preserveAspectRatio="xMidYMid" class="full diagram"> <g transform="translate(100, 100)" class="selections"> <text x="0" y="0" data-pos="0" class="ready">⁂</text> <text x="200" y="0" data-pos="1" class="ready">⁂</text> <text x="400" y="0" data-pos="2" class="ready">⁂</text> <text x="600" y="0" data-pos="3" class="ready">☺</text> <text x="800" y="0" data-pos="4" class="ready">✈</text> <text x="1000" y="0" data-pos="5" class="ready">☭</text> </g> </svg>
+<div class="demo selection-with-repl">
+  <button>
 Select
 </button>
-  <h3 class="nomargin">
-Selections =
-</h3>
-  
-<span class="selections big"> </span>
-<h3 class="nomargin">
-L =
-</h3>
-  
-<span class="l big"> </span>
 </div>
+
 </section>
 <section id="weighted-selection-repl-2-notes" class="slide level1">
 <h1>Optimizing for memory</h1>
 <ul>
 <li>Naive solution uses a lot of memory</li>
 <li>Can do better by counting each unique choice</li>
-<li><code>{6, [{a, 3}, {b, 1}, {c, 1}, {d, 1}]}</code></li>
 <li>Tradeoff - it's harder to seek to Nth choice</li>
 </ul>
+<div class="bigger">
+<pre class="sourceCode erlang"><code class="sourceCode erlang"><span class="fu">{</span><span class="dv">6</span><span class="fu">,</span> <span class="fu">[</span> <span class="fu">{</span><span class="ch">a</span><span class="fu">,</span> <span class="dv">3</span><span class="fu">}</span>
+    <span class="fu">,</span> <span class="fu">{</span><span class="ch">b</span><span class="fu">,</span> <span class="dv">1</span><span class="fu">}</span>
+    <span class="fu">,</span> <span class="fu">{</span><span class="ch">c</span><span class="fu">,</span> <span class="dv">1</span><span class="fu">}</span>
+    <span class="fu">,</span> <span class="fu">{</span><span class="ch">d</span><span class="fu">,</span> <span class="dv">1</span><span class="fu">}</span> <span class="fu">]}</span></code></pre>
+</div>
 </section>
 <section id="alias-notes" class="slide level1">
 <h1>Alias method</h1>
@@ -309,7 +301,13 @@ tail
 </section>
 <section id="max-heap-notes" class="slide level1">
 <h1>Simple max heap</h1>
-<p>Seems to be a good compromise between speed and memory Highest weights first Highest weights are most likely to be updated Worst case <code>O(n)</code> for every operation But very good common case, near head of the list</p>
+<ul>
+<li>Seems to be a good compromise between speed and memory</li>
+<li>Highest weights first</li>
+<li>Highest weights are most likely to be updated</li>
+<li>Worst case <code>O(n)</code> for every operation</li>
+<li>But very good common case, near head of the list</li>
+</ul>
 </section>
 <section id="max-heap" class="slide level1">
 <h1>Simple max heap</h1>
