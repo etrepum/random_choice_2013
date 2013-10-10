@@ -279,17 +279,20 @@ choose(L) ->
 # Sorted list {#sorted-list}
 
 <div class="demo">
-<div style="float: left">
-  <button>Choose</button>
-  <form>
-  <input type="text" placeholder="Enter words" /><br />
-  <span class="big output"></span>
-  </form>
+<div class="left-pane" style="float: left">
+  <button class="choose">Choose</button>
+  <button class="add-input">Add Quote</button>
+  <button class="add-all">Add All</button>
+  <div class="output"></div>
+  <div class="quote"></div>
 </div>
-<table style="float: right">
+<table class="right-pane" style="float: right">
   <thead>
-    <tr><th>Key&nbsp;</th><th>Weight</th></tr>
+    <tr><th class="key">Key&nbsp;</th><th>Weight</th></tr>
     </thead>
+  <tfoot>
+    <tr><td class="length num">0</td><td class="sum num">0</td></tr>
+  </tfoot>
   <tbody>
   </tbody>
 </table>

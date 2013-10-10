@@ -316,23 +316,34 @@ tail
 <section id="sorted-list" class="slide level1">
 <h1>Sorted list</h1>
 <div class="demo">
-<div style="float: left">
-  <button>
+<div class="left-pane" style="float: left">
+  <button class="choose">
 Choose
 </button>
-  <form>
-  
-<input type="text" placeholder="Enter words" /><br /> <span class="big output"></span>
-</form>
+  <button class="add-input">
+Add Quote
+</button>
+  <button class="add-all">
+Add All
+</button>
+  <div class="output"></div>
+  <div class="quote"></div>
 </div>
-<table style="float: right">
+<table class="right-pane" style="float: right">
   <thead>
-    <tr><th>
+    <tr><th class="key">
 Key 
 </th><th>
 Weight
 </th></tr>
     </thead>
+  <tfoot>
+    <tr><td class="length num">
+0
+</td><td class="sum num">
+0
+</td></tr>
+  </tfoot>
   <tbody>
   </tbody>
 </table>

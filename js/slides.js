@@ -1,6 +1,7 @@
 window.addEventListener('DOMContentLoaded', function () {
   var Reveal = window.Reveal,
-      d3 = window.d3;
+      d3 = window.d3,
+      EWD = window.EWD;
   function finishEvent() {
     d3.event.stopPropagation();
     d3.event.preventDefault();
@@ -135,7 +136,21 @@ window.addEventListener('DOMContentLoaded', function () {
   (function () {
     var sortedList = [];
     var total = 0;
+    var quotes = EWD.filter(function (s) { return s !== null; });
+    var qIndex = 0;
+    var repl = function (str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    };
+    var fmtRow = function (elem) {
+      return '<tr>' + fmtTds(elem) + '</tr>';
+    };
+    var fmtTds = function (elem) {
+      return '<td>' + repl(elem[0]) + '</td><td class="num">' + elem[1] + '</td>';
+    };
     var handleInput = function (word) {
+      if (!word) return;
       var count = 1;
       total += 1;
       for (var i = 0; i < sortedList.length; i++) {
@@ -148,37 +163,70 @@ window.addEventListener('DOMContentLoaded', function () {
       for (i = i - 1; i >= 0 && sortedList[i][1] <= count; i--) {
       }
       sortedList.splice(i + 1, 0, [word, count]);
-      var repl = function (str) {
-        var div = document.createElement('div');
-        div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
-      };
-      var fmt = function (elem) {
-        return '<tr><td>' + repl(elem[0]) + '</td><td>' + elem[1] + '</td></tr>';
-      };
-      d3.selectAll("#sorted-list div.demo tbody").html(sortedList.map(fmt).join(''));
     };
-    d3.selectAll("#sorted-list div.demo form").on('submit', function () {
-      var $input = d3.select(this).selectAll('input');
-      $input.property('value').split(/\s+/).forEach(handleInput);
-      $input.property('value', '');
+    var updateTable = function () {
+      d3.selectAll("#sorted-list div.demo tbody").html(sortedList.slice(0,9).map(fmtRow).join(''));
+      d3.select('#sorted-list tfoot .length').text(sortedList.length);
+      d3.select('#sorted-list tfoot .sum').text(total);
+    };
+    d3.selectAll('#sorted-list .output').on('click', function () { 
+      d3.select(this).html('');
       finishEvent();
     });
-    d3.selectAll("#sorted-list div.demo button").on('click', function () {
-      var n = 1 + Math.floor(Math.random() * total);
+    d3.selectAll('#sorted-list button.add-all').on('click', function () {
+      quotes.slice(qIndex % quotes.length).map(function (q) {
+        q.split(/\W+/).map(handleInput);
+        d3.selectAll('#sorted-list .quote').html('');
+      });
+      updateTable();
+      qIndex = 0;
+      finishEvent();
+    });
+    d3.selectAll("#sorted-list button.add-input").on('click', function () {
+      var q = quotes[qIndex % quotes.length];
+      qIndex++;
+      q.split(/\W+/).map(handleInput);
+      updateTable();
+      d3.selectAll('#sorted-list .quote').text(q);
+      finishEvent();
+    });
+    // Truncate list at 10
+    // Show total weight
+    // Show last chosen word
+    // Show list of chosen words
+    // Enter words from EWD
+    // Implement Markov chaining
+    d3.selectAll("#sorted-list button.choose").on('click', function () {
+      updateTable();
+      var n = Math.floor(Math.random() * total);
       var $tbody = d3.selectAll("#sorted-list div.demo table tbody");
       $tbody.selectAll('.selected').classed('selected', false);
       var n1 = n;
-      $tbody.selectAll('tr').each(function (d, i) {
-        if (n1 > 0) {
-          var $row = d3.select(this);
-          $row.classed('selected', true);
-          n1 -= sortedList[i][1];
-          if (n1 <= 0) {
-            $row.selectAll('td').classed('selected', true);
+      for (var idx = 0; idx < sortedList.length; idx++) {
+        n1 -= sortedList[idx][1];
+        if (n1 <= 0) break;
+      }
+      d3.selectAll('#sorted-list .output').insert('span').text(' ' + sortedList[idx][0]);
+      var rows = $tbody.selectAll('tr');
+      if (rows.size() < idx) {
+        rows.classed('selected', true);
+        $tbody.insert('tr')
+          .classed('inserted', true)
+          .html('<td colspan="2"><hr/></td>');
+        $tbody.insert('tr')
+          .html(fmtTds(sortedList[idx]))
+          .classed('inserted', true)
+          .classed('selected', true)
+          .selectAll('td').classed('selected', true);
+      } else {
+        rows.each(function (d, i) {
+          if (i > idx) return;
+          var row = d3.select(this).classed('selected', true);
+          if (i === idx) {
+            row.selectAll('td').classed('selected', true);
           }
-        }
-      });
+        });
+      }
       finishEvent();
     });
   })();
