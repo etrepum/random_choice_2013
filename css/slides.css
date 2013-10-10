@@ -15,6 +15,9 @@
 #sorted-list .output, #sorted-list .quote { margin-top: 1em; }
 #sorted-list table.right-pane { width: 44%; text-align: left; }
 
+#markov-text-generator .demo { text-align: left; }
+#markov-text-generator .output, #markov-text-generator .quote { margin-top: 1em; }
+
 div.demo .nomargin { margin-bottom: 0em; line-height: 1.25; }
 div.demo .big { font-size: 3em; line-height: 1.25; }
 tr.selected { background-color: #ffaaaa; }

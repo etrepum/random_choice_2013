@@ -298,28 +298,37 @@ choose(L) ->
 </table>
 </div>
 
+# Markov chain {#markov-chain-notes}
+
+* Finite state space
+* Present, future, and past states are independent
+* Graph where edges represent probability for state change
+
 # Andrey Andreyevich Markov
 <!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
 ![Андре́й Андре́евич Ма́рков](img/AAMarkov.jpg)
 
-# Markov chain
+# Two-state Markov Chain
 <!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
-![Markov Chain](img/Markovkate_01.svg)
+<img src="img/Markovkate_01.svg" title="Markov Chain" />
 
-# Markov text generator
+# Markov Chains for Text
 
-* Each step in a markov chain model makes a random choice
-* For the IRC bot, the number of word choices can be very large
-* Previous implementation was very simple, but too inefficient
-* Used too much memory, had to be retired years ago
+* State transitions are from one word to the next
+* Use special tokens for start and stop
+* One weighted random selection data structure per word (and start)
 
-# Really?
+# Markov Text Generator
 
-* (Most) ad servers also use random choice
-* Mochi Media built this kind of ad server in Erlang
-* Was fun to come up with an efficent way to do it
-* Note that Markov models weren't used in our ad server
-* … but random choice is common to both
+<div class="demo">
+<div class="left-pane" style="float: left">
+  <button class="generate">Generate</button>
+  <button class="add-input">Add Quote</button>
+  <button class="add-all">Add All</button>
+  <div class="output"></div>
+  <div class="quote"></div>
+</div>
+</div>
 
 # Questions? {#info}
 

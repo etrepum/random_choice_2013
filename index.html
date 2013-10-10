@@ -350,6 +350,14 @@ Weight
 </div>
 
 </section>
+<section id="markov-chain-notes" class="slide level1">
+<h1>Markov chain</h1>
+<ul>
+<li>Finite state space</li>
+<li>Present, future, and past states are independent</li>
+<li>Graph where edges represent probability for state change</li>
+</ul>
+</section>
 <section id="andrey-andreyevich-markov" class="slide level1">
 <h1>Andrey Andreyevich Markov</h1>
 <!-- http://en.wikipedia.org/wiki/File:AAMarkov.jpg -->
@@ -357,31 +365,37 @@ Weight
 <img src="img/AAMarkov.jpg" alt="Андре́й Андре́евич Ма́рков" /><figcaption>Андре́й Андре́евич Ма́рков</figcaption>
 </figure>
 </section>
-<section id="markov-chain" class="slide level1">
-<h1>Markov chain</h1>
+<section id="two-state-markov-chain" class="slide level1">
+<h1>Two-state Markov Chain</h1>
 <!-- http://en.wikipedia.org/wiki/File:Markovkate_01.svg -->
-<figure>
-<img src="img/Markovkate_01.svg" alt="Markov Chain" /><figcaption>Markov Chain</figcaption>
-</figure>
+<p><img src="img/Markovkate_01.svg" title="Markov Chain" /></p>
+</section>
+<section id="markov-chains-for-text" class="slide level1">
+<h1>Markov Chains for Text</h1>
+<ul>
+<li>State transitions are from one word to the next</li>
+<li>Use special tokens for start and stop</li>
+<li>One weighted random selection data structure per word (and start)</li>
+</ul>
 </section>
 <section id="markov-text-generator" class="slide level1">
-<h1>Markov text generator</h1>
-<ul>
-<li>Each step in a markov chain model makes a random choice</li>
-<li>For the IRC bot, the number of word choices can be very large</li>
-<li>Previous implementation was very simple, but too inefficient</li>
-<li>Used too much memory, had to be retired years ago</li>
-</ul>
-</section>
-<section id="really" class="slide level1">
-<h1>Really?</h1>
-<ul>
-<li>(Most) ad servers also use random choice</li>
-<li>Mochi Media built this kind of ad server in Erlang</li>
-<li>Was fun to come up with an efficent way to do it</li>
-<li>Note that Markov models weren't used in our ad server</li>
-<li>… but random choice is common to both</li>
-</ul>
+<h1>Markov Text Generator</h1>
+<div class="demo">
+<div class="left-pane" style="float: left">
+  <button class="generate">
+Generate
+</button>
+  <button class="add-input">
+Add Quote
+</button>
+  <button class="add-all">
+Add All
+</button>
+  <div class="output"></div>
+  <div class="quote"></div>
+</div>
+</div>
+
 </section>
 <section id="info" class="slide level1">
 <h1>Questions?</h1>

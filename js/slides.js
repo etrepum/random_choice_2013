@@ -133,9 +133,39 @@ window.addEventListener('DOMContentLoaded', function () {
     finishEvent();
   });
 
+  function SortedList() {
+    this.list = [];
+    this.total = 0;
+  }
+  SortedList.prototype.inc = function (key) {
+    var count = 1;
+    this.total++;
+    var sortedList = this.list;
+    // get current count and remove
+    for (var i = 0; i < sortedList.length; i++) {
+      if (sortedList[i][0] === key) {
+        count += sortedList[i][1];
+        sortedList.splice(i, 1);
+        break;
+      }
+    }
+    // insert
+    for (i = i - 1; i >= 0 && sortedList[i][1] <= count; i--) {
+    }
+    sortedList.splice(i + 1, 0, [key, count]);
+    return count;
+  };
+  SortedList.prototype.choose = function () {
+    var n1 = 1 + Math.floor(Math.random() * this.total);
+    var sortedList = this.list;
+    for (var idx = 0; idx < sortedList.length; idx++) {
+      n1 -= sortedList[idx][1];
+      if (n1 <= 0) break;
+    }
+    return idx;
+  };
   (function () {
-    var sortedList = [];
-    var total = 0;
+    var sortedList = new SortedList();
     var quotes = EWD.filter(function (s) { return s !== null; });
     var qIndex = 0;
     var repl = function (str) {
@@ -150,24 +180,14 @@ window.addEventListener('DOMContentLoaded', function () {
       return '<td>' + repl(elem[0]) + '</td><td class="num">' + elem[1] + '</td>';
     };
     var handleInput = function (word) {
-      if (!word) return;
-      var count = 1;
-      total += 1;
-      for (var i = 0; i < sortedList.length; i++) {
-        if (sortedList[i][0] === word) {
-          count += sortedList[i][1];
-          sortedList.splice(i, 1);
-          break;
-        }
+      if (word) {
+        sortedList.inc(word);
       }
-      for (i = i - 1; i >= 0 && sortedList[i][1] <= count; i--) {
-      }
-      sortedList.splice(i + 1, 0, [word, count]);
     };
     var updateTable = function () {
-      d3.selectAll("#sorted-list div.demo tbody").html(sortedList.slice(0,9).map(fmtRow).join(''));
-      d3.select('#sorted-list tfoot .length').text(sortedList.length);
-      d3.select('#sorted-list tfoot .sum').text(total);
+      d3.selectAll("#sorted-list div.demo tbody").html(sortedList.list.slice(0,9).map(fmtRow).join(''));
+      d3.select('#sorted-list tfoot .length').text(sortedList.list.length);
+      d3.select('#sorted-list tfoot .sum').text(sortedList.total);
     };
     d3.selectAll('#sorted-list .output').on('click', function () { 
       d3.select(this).html('');
@@ -175,38 +195,28 @@ window.addEventListener('DOMContentLoaded', function () {
     });
     d3.selectAll('#sorted-list button.add-all').on('click', function () {
       quotes.slice(qIndex % quotes.length).map(function (q) {
-        q.split(/\W+/).map(handleInput);
+        q.split(/\s+/).map(handleInput);
         d3.selectAll('#sorted-list .quote').html('');
       });
       updateTable();
       qIndex = 0;
+      d3.selectAll('#sorted-list .quote').html('').insert('em').text('All ' + quotes.length + ' quotes loaded').style('opacity', 1).transition().delay(2000).style('opacity', 0);
       finishEvent();
     });
     d3.selectAll("#sorted-list button.add-input").on('click', function () {
       var q = quotes[qIndex % quotes.length];
       qIndex++;
-      q.split(/\W+/).map(handleInput);
+      q.split(/\s+/).map(handleInput);
       updateTable();
       d3.selectAll('#sorted-list .quote').text(q);
       finishEvent();
     });
-    // Truncate list at 10
-    // Show total weight
-    // Show last chosen word
-    // Show list of chosen words
-    // Enter words from EWD
-    // Implement Markov chaining
     d3.selectAll("#sorted-list button.choose").on('click', function () {
       updateTable();
-      var n = Math.floor(Math.random() * total);
+      var idx = sortedList.choose();
       var $tbody = d3.selectAll("#sorted-list div.demo table tbody");
       $tbody.selectAll('.selected').classed('selected', false);
-      var n1 = n;
-      for (var idx = 0; idx < sortedList.length; idx++) {
-        n1 -= sortedList[idx][1];
-        if (n1 <= 0) break;
-      }
-      d3.selectAll('#sorted-list .output').insert('span').text(' ' + sortedList[idx][0]);
+      d3.selectAll('#sorted-list .output').insert('span').text(' ' + sortedList.list[idx][0]);
       var rows = $tbody.selectAll('tr');
       if (rows.size() < idx) {
         rows.classed('selected', true);
@@ -214,7 +224,7 @@ window.addEventListener('DOMContentLoaded', function () {
           .classed('inserted', true)
           .html('<td colspan="2"><hr/></td>');
         $tbody.insert('tr')
-          .html(fmtTds(sortedList[idx]))
+          .html(fmtTds(sortedList.list[idx]))
           .classed('inserted', true)
           .classed('selected', true)
           .selectAll('td').classed('selected', true);
@@ -227,6 +237,56 @@ window.addEventListener('DOMContentLoaded', function () {
           }
         });
       }
+      finishEvent();
+    });
+  })();
+  (function () {
+    var stateSpace = {};
+    var END = 'END';
+    window._stateSpace = stateSpace;
+    var quotes = EWD.filter(function (s) { return s !== null; });
+    var qIndex = 0;
+    var slide = d3.selectAll('#markov-text-generator');
+    var getState = function (w) {
+      var sl = stateSpace[w];
+      if (sl === undefined) {
+        sl = stateSpace[w] = new SortedList();
+      }
+      return sl;
+    };
+    var addQuote = function (q) {
+      q.split(/\s+/).reduce(
+        function (sl, w) {
+          if (!w) return sl;
+          sl.inc(w);
+          return getState(w);
+        },
+        getState('')).inc(END);
+    };
+    slide.selectAll('button.generate').on('click', function () {
+      var sl = getState('');
+      var words = [];
+      for (var i = 0; i < 100; i++) {
+        var idx = sl.choose();
+        var w = sl.list[idx][0];
+        if (w === END) break;
+        words.push(w);
+        sl = getState(w);
+      }
+      slide.selectAll('.output').text(words.join(' '));
+      finishEvent();
+    });
+    slide.selectAll('button.add-input').on('click', function () {
+      var q = quotes[qIndex % quotes.length];
+      qIndex++;
+      addQuote(q);
+      slide.selectAll('.quote').text(q);
+      finishEvent();
+    });
+    slide.selectAll('button.add-all').on('click', function () {
+      quotes.slice(qIndex % quotes.length).map(addQuote);
+      qIndex = 0;
+      slide.selectAll('.quote').html('').insert('em').text('All ' + quotes.length + ' quotes loaded').style('opacity', 1).transition().delay(2000).style('opacity', 0);
       finishEvent();
     });
   })();
