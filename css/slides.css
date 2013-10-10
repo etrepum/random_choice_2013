@@ -15,6 +15,8 @@
 #sorted-list .output, #sorted-list .quote { margin-top: 1em; }
 #sorted-list table.right-pane { width: 44%; text-align: left; }
 
+#alias .demo { text-align: left; }
+
 #markov-text-generator .demo { text-align: left; }
 #markov-text-generator .output, #markov-text-generator .quote { margin-top: 1em; }
 
